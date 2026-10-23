@@ -305,10 +305,13 @@ if __name__ == '__main__':
     print("\n" + "="*65)
     print(" 🌾 HỆ THỐNG KHUYẾN NGHỊ CÂY TRỒNG AGRIBOT AI ECO-GREEN ĐANG KHỞI CHẠY 🌾")
     print("="*65)
-    print(f"[*] Mở trình duyệt web và truy cập địa chỉ:")
+    print(f"[*] Máy của bạn truy cập tại:")
     print(f"    👉 http://127.0.0.1:{port}")
     print(f"    👉 http://localhost:{port}")
+    print(f"[*] Máy tính / điện thoại khác cùng mạng Wi-Fi truy cập tại:")
+    print(f"    👉 http://192.168.1.26:{port}")
     print("="*65)
     print("[*] Nhấn Ctrl + C trong Terminal để dừng máy chủ bất kỳ lúc nào.\n")
-    app.run(host='127.0.0.1', port=port, debug=False)
+    app.run(host='0.0.0.0', port=port, debug=False)
+
 
