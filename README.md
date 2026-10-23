@@ -65,9 +65,15 @@ python app.py
 
 Truy cập trên trình duyệt tại: **http://127.0.0.1:5000** hoặc **http://localhost:5000**
 
+### 4. Chia sẻ cho máy tính / điện thoại khác truy cập (100% Free)
+
+- **Cùng mạng Wi-Fi**: Mở trình duyệt trên máy khác và gõ địa chỉ IP của máy chủ (ví dụ `http://192.168.1.26:5000`).
+- **Qua Internet toàn cầu (Cloudflare Tunnel)**: Nhấp đúp chuột vào file `run_tunnel.bat` ở thư mục gốc để sinh đường link công khai (HTTPS) gửi cho người dùng từ xa.
+
 ---
 
 ## 👥 Tài Khoản Mẫu Trải Nghiệm Nhanh
 - **Email**: `nongdan@gmail.com`
 - **Mật khẩu**: `password123`
 *(Hoặc tạo tài khoản mới tại trang Đăng ký)*
+
