@@ -63,7 +63,7 @@ Chạy ứng dụng Flask:
 python app.py
 ```
 
-Truy cập trên trình duyệt tại: **http://127.0.0.1:5000** hoặc **http://localhost:5000**
+Truy cập trên trình duyệt tại: https://choice-holds-flash-work.trycloudflare.com/
 
 ### 4. Chia sẻ cho máy tính / điện thoại khác truy cập (100% Free)
 
