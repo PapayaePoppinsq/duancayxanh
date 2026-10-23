@@ -40,3 +40,6 @@ repo_ref/
 
 # Logs
 *.log
+
+# Cloudflare binary
+cloudflared.exe
