@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng ký — AgriBot AI Eco-Green</title>
+  
+  <!-- Font Geist & Geist Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <style>
+    /* ==========================================================================
+       AGRIBOT AI — MODERN ECO-GREEN DESIGN SYSTEM
+       Primary Color: Emerald Forest Green (#15803d)
+       ========================================================================== */
+    :root {
+      --color-primary: #15803d;
+      --color-primary-hover: #166534;
+      --color-primary-light: #dcfce7;
+      --color-primary-subtle: #f0fdf4;
+      --color-primary-border: #86efac;
+      --color-accent: #22c55e;
+      --color-accent-glow: rgba(34, 197, 94, 0.25);
+      
+      --color-on-primary: #ffffff;
+      --color-ink: #0f172a;
+      --color-body: #334155;
+      --color-mute: #64748b;
+      --color-faint: #94a3b8;
+      --color-hairline: #e2ede5;
+      --color-hairline-soft: #f1f8f3;
+      --color-canvas: #f6fbf7;
+      --color-canvas-elevated: #ffffff;
+      
+      --color-link: #15803d;
+      --color-link-hover: #166534;
+      --color-error: #dc2626;
+      --color-error-bg: #fef2f2;
+      --color-error-border: #fee2e2;
+
+      --font-sans: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+
+      --radius-sm: 8px;
+      --radius-md: 14px;
+      --radius-pill: 100px;
+      --shadow-whisper: 0px 1px 3px rgba(16, 75, 40, 0.05);
+      --shadow-card: 0px 10px 30px -5px rgba(22, 101, 52, 0.08), 0 0 1px 1px rgba(22, 101, 52, 0.05);
+    }
+
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background-color: var(--color-canvas);
+      color: var(--color-ink);
+      font-family: var(--font-sans);
+      font-size: 14px;
+      line-height: 20px;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      padding: 24px 16px;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Ambient Green Eco Mesh Glow */
+    .bg-mesh {
+      position: absolute;
+      top: -140px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 650px;
+      height: 450px;
+      background: radial-gradient(circle at 50% 50%, 
+        rgba(34, 197, 94, 0.22) 0%, 
+        rgba(16, 185, 129, 0.14) 35%, 
+        rgba(132, 204, 22, 0.08) 60%, 
+        transparent 80%);
+      filter: blur(65px);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .auth-container {
+      width: 100%;
+      max-width: 410px;
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Logo Header */
+    .auth-header {
+      text-align: center;
+      margin-bottom: 28px;
+    }
+
+    .brand-icon-wrapper {
+      width: 54px;
+      height: 54px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #22c55e 0%, #15803d 100%);
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 8px 20px -4px rgba(22, 101, 52, 0.35);
+      margin-bottom: 16px;
+      position: relative;
+    }
+
+    .brand-icon-wrapper::after {
+      content: '';
+      position: absolute;
+      inset: -3px;
+      border-radius: 19px;
+      border: 1px solid rgba(34, 197, 94, 0.4);
+      pointer-events: none;
+    }
+
+    .brand-glyph {
+      width: 28px;
+      height: 28px;
+      fill: none;
+      stroke: #ffffff;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .auth-title {
+      font-size: 26px;
+      font-weight: 700;
+      letter-spacing: -0.6px;
+      color: var(--color-ink);
+      margin-bottom: 6px;
+    }
+
+    .auth-subtitle {
+      font-size: 14px;
+      color: var(--color-mute);
+      line-height: 20px;
+    }
+
+    /* Auth Card */
+    .auth-card {
+      background: var(--color-canvas-elevated);
+      border: 1px solid var(--color-hairline);
+      border-radius: var(--radius-md);
+      padding: 32px 28px;
+      box-shadow: var(--shadow-card);
+      position: relative;
+    }
+
+    /* Alert / Flash Feedback */
+    .alert {
+      padding: 12px 14px;
+      border-radius: var(--radius-sm);
+      font-size: 13px;
+      line-height: 18px;
+      margin-bottom: 22px;
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+    }
+
+    .alert-error {
+      background-color: var(--color-error-bg);
+      border: 1px solid var(--color-error-border);
+      color: var(--color-error);
+    }
+
+    .alert-success {
+      background-color: var(--color-primary-subtle);
+      border: 1px solid var(--color-primary-border);
+      color: var(--color-primary);
+    }
+
+    /* Form Fields */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      margin-bottom: 18px;
+    }
+
+    .form-label {
+      font-size: 13px;
+      font-weight: 600;
+      color: var(--color-body);
+    }
+
+    .input-wrapper {
+      position: relative;
+      display: flex;
+      align-items: center;
+    }
+
+    .text-input {
+      width: 100%;
+      height: 42px;
+      background: var(--color-canvas-elevated);
+      color: var(--color-ink);
+      border: 1px solid var(--color-hairline);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      padding: 0 14px;
+      font-family: inherit;
+      outline: none;
+      transition: all 0.18s ease;
+    }
+
+    .text-input::placeholder {
+      color: var(--color-faint);
+    }
+
+    .text-input:hover:not(:focus) {
+      border-color: #cbd5e1;
+    }
+
+    .text-input:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px rgba(34, 197, 94, 0.16);
+      background-color: #ffffff;
+    }
+
+    /* Primary Submit Button */
+    .btn-submit {
+      width: 100%;
+      height: 44px;
+      background: linear-gradient(135deg, #16a34a 0%, #15803d 100%);
+      color: var(--color-on-primary);
+      border: 1px solid #15803d;
+      border-radius: var(--radius-pill);
+      font-size: 14px;
+      font-weight: 600;
+      letter-spacing: -0.2px;
+      cursor: pointer;
+      margin-top: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.18s ease;
+      box-shadow: 0 4px 14px rgba(22, 101, 52, 0.25);
+    }
+
+    .btn-submit:hover {
+      background: linear-gradient(135deg, #15803d 0%, #166534 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 18px rgba(22, 101, 52, 0.35);
+    }
+
+    .btn-submit:active {
+      transform: translateY(0);
+      box-shadow: 0 2px 8px rgba(22, 101, 52, 0.2);
+    }
+
+    /* Auth Footer */
+    .auth-footer {
+      text-align: center;
+      margin-top: 24px;
+      font-size: 13px;
+      color: var(--color-mute);
+    }
+
+    .auth-link {
+      color: var(--color-primary);
+      font-weight: 600;
+      text-decoration: none;
+      transition: color 0.15s ease;
+    }
+
+    .auth-link:hover {
+      color: var(--color-primary-hover);
+      text-decoration: underline;
+    }
+
+    .copyright {
+      margin-top: 32px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--color-faint);
+      text-align: center;
+      letter-spacing: 0.04em;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Ambient Green Glow Background -->
+  <div class="bg-mesh"></div>
+
+  <div class="auth-container">
+    
+    <!-- Header with Brand Icon -->
+    <div class="auth-header">
+      <div class="brand-icon-wrapper">
+        <!-- Sprout / Leaf SVG -->
+        <svg class="brand-glyph" viewBox="0 0 24 24">
+          <path d="M7 20h10" />
+          <path d="M10 20c0-6 4-9 8-9-1.5 4-5 6-8 9z" />
+          <path d="M14 20c0-8-5-12-10-12 1.5 5 6 8 10 12z" />
+        </svg>
+      </div>
+      <h1 class="auth-title">Đăng ký tài khoản</h1>
+      <p class="auth-subtitle">Trải nghiệm hệ sinh thái Khuyến nghị Nông nghiệp Thông minh</p>
+    </div>
+
+    <!-- Main Card -->
+    <div class="auth-card">
+      
+      <!-- Flash Alert Notifications -->
+      {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+          {% for category, message in messages %}
+            <div class="alert alert-{{ 'error' if category == 'error' or category == 'danger' else 'success' }}">
+              <span>{{ '⚠️' if category == 'error' or category == 'danger' else '✓' }}</span>
+              <span>{{ message }}</span>
+            </div>
+          {% endfor %}
+        {% endif %}
+      {% endwith %}
+
+      <form method="POST" action="{{ url_for('register') }}">
+        
+        <!-- Email Input -->
+        <div class="form-group">
+          <label class="form-label" for="email">Địa chỉ Email</label>
+          <div class="input-wrapper">
+            <input 
+              type="email" 
+              id="email" 
+              name="email" 
+              class="text-input" 
+              placeholder="nongdan@example.com" 
+              required 
+              autocomplete="email"
+            >
+          </div>
+        </div>
+
+        <!-- Password Input -->
+        <div class="form-group">
+          <label class="form-label" for="password">Mật khẩu</label>
+          <div class="input-wrapper">
+            <input 
+              type="password" 
+              id="password" 
+              name="password" 
+              class="text-input" 
+              placeholder="Tối thiểu 6 ký tự" 
+              required 
+              autocomplete="new-password"
+            >
+          </div>
+        </div>
+
+        <!-- Confirm Password Input -->
+        <div class="form-group">
+          <label class="form-label" for="confirm">Xác nhận mật khẩu</label>
+          <div class="input-wrapper">
+            <input 
+              type="password" 
+              id="confirm" 
+              name="confirm" 
+              class="text-input" 
+              placeholder="Nhập lại mật khẩu" 
+              required 
+              autocomplete="new-password"
+            >
+          </div>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" class="btn-submit">
+          <span>Tạo tài khoản</span>
+          <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+
+      </form>
+
+      <!-- Auth Switcher -->
+      <div class="auth-footer">
+        Đã có tài khoản? 
+        <a href="{{ url_for('login') }}" class="auth-link">Đăng nhập ngay</a>
+      </div>
+
+    </div>
+
+    <div class="copyright">
+      AGRIBOT AI • ECO-GREEN SMART AGRICULTURE SYSTEM
+    </div>
+
+  </div>
+
+</body>
+</html>
