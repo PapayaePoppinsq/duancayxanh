@@ -1426,6 +1426,553 @@
       margin-top: auto;
       background: #ffffff;
     }
+  
+    /* ==========================================================================
+       VIETSMARTAGRI AI CHATBOT WORKSPACE & FLOATING WIDGET STYLES
+       ========================================================================== */
+    .chat-workspace-grid {
+      display: grid;
+      grid-template-columns: 320px 1fr;
+      gap: 22px;
+      align-items: start;
+      margin-bottom: 24px;
+    }
+
+    .chat-sidebar-card {
+      padding: 22px;
+      background: #ffffff;
+      border: 1px solid var(--color-hairline);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+    }
+
+    .chat-sidebar-section-title {
+      font-size: 11px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      color: var(--color-mute);
+      margin-bottom: 10px;
+    }
+
+    .chat-topic-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .chat-topic-btn {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 14px;
+      border-radius: var(--radius-sm);
+      border: 1px solid transparent;
+      background: #fbfdfc;
+      color: var(--color-ink);
+      font-family: inherit;
+      font-size: 13px;
+      font-weight: 500;
+      cursor: pointer;
+      text-align: left;
+      transition: all 0.16s ease;
+    }
+
+    .chat-topic-btn:hover {
+      background: var(--color-primary-subtle);
+      color: var(--color-primary);
+      border-color: var(--color-primary-border);
+      transform: translateX(2px);
+    }
+
+    .chat-topic-btn.active {
+      background: var(--color-primary);
+      color: #ffffff;
+      font-weight: 600;
+    }
+
+    .chat-topic-count {
+      font-size: 11px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: var(--radius-pill);
+      background: var(--color-primary-light);
+      color: var(--color-primary);
+    }
+
+    .chat-topic-btn.active .chat-topic-count {
+      background: rgba(255, 255, 255, 0.25);
+      color: #ffffff;
+    }
+
+    .hf-link-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 14px;
+      background: #fff8eb;
+      border: 1px solid #fed7aa;
+      border-radius: var(--radius-sm);
+      color: #c2410c;
+      font-size: 12px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.15s ease;
+    }
+
+    .hf-link-badge:hover {
+      background: #ffedd5;
+      border-color: #fb923c;
+      transform: translateY(-1px);
+    }
+
+    /* Chat Main Window */
+    .chat-main-card {
+      display: flex;
+      flex-direction: column;
+      height: 760px;
+      max-height: calc(100vh - 160px);
+      padding: 0;
+      overflow: hidden;
+      background: #ffffff;
+      border: 1px solid var(--color-hairline);
+      border-radius: var(--radius-lg);
+      box-shadow: var(--shadow-card);
+    }
+
+    .chat-main-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 22px;
+      border-bottom: 1px solid var(--color-hairline);
+      background: #fbfdfc;
+    }
+
+    .chat-agent-info {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .chat-avatar-wrapper {
+      position: relative;
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      background: var(--color-primary-subtle);
+      border: 1px solid var(--color-primary-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 22px;
+    }
+
+    .chat-online-dot {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      width: 12px;
+      height: 12px;
+      background: #22c55e;
+      border: 2px solid #ffffff;
+      border-radius: 50%;
+      animation: pulseDot 2s infinite;
+    }
+
+    @keyframes pulseDot {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.6; transform: scale(1.15); }
+    }
+
+    .chat-agent-name {
+      font-size: 15px;
+      font-weight: 700;
+      color: var(--color-ink);
+    }
+
+    .chat-agent-sub {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 12px;
+      color: var(--color-mute);
+      margin-top: 2px;
+    }
+
+    .status-live-badge {
+      background: #dcfce7;
+      color: #15803d;
+      font-size: 10px;
+      font-weight: 700;
+      padding: 2px 7px;
+      border-radius: 4px;
+      border: 1px solid #bbf7d0;
+    }
+
+    .btn-chat-action {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 12px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--color-hairline);
+      background: #ffffff;
+      color: var(--color-mute);
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.15s ease;
+    }
+
+    .btn-chat-action:hover {
+      background: #fee2e2;
+      color: #b91c1c;
+      border-color: #fca5a5;
+    }
+
+    /* Chat Messages Stream */
+    .chat-messages-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 24px;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+      background: #f8faf9;
+      scroll-behavior: smooth;
+    }
+
+    .chat-msg {
+      display: flex;
+      gap: 12px;
+      max-width: 86%;
+      animation: msgPop 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    @keyframes msgPop {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    .chat-msg-user {
+      align-self: flex-end;
+      flex-direction: row-reverse;
+    }
+
+    .chat-msg-user .msg-bubble {
+      background: linear-gradient(135deg, #15803d, #166534);
+      color: #ffffff;
+      border-radius: 18px 18px 4px 18px;
+      padding: 12px 18px;
+      box-shadow: 0 3px 12px rgba(21, 128, 61, 0.25);
+      font-size: 14px;
+      line-height: 1.5;
+    }
+
+    .chat-msg-user .msg-time {
+      color: rgba(255, 255, 255, 0.75);
+      font-size: 10px;
+      margin-top: 4px;
+      text-align: right;
+    }
+
+    .chat-msg-bot {
+      align-self: flex-start;
+    }
+
+    .msg-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--color-primary-subtle);
+      border: 1px solid var(--color-primary-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      flex-shrink: 0;
+    }
+
+    .chat-msg-bot .msg-bubble {
+      background: #ffffff;
+      color: var(--color-ink);
+      border: 1px solid var(--color-hairline);
+      border-radius: 18px 18px 18px 4px;
+      padding: 18px 20px;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.04);
+      font-size: 13.5px;
+      line-height: 1.65;
+    }
+
+    .msg-author {
+      font-size: 11px;
+      font-weight: 700;
+      color: var(--color-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-bottom: 8px;
+    }
+
+    .msg-content h3 {
+      font-size: 15px;
+      font-weight: 700;
+      color: #14532d;
+      margin: 4px 0 8px 0;
+    }
+
+    .msg-content h4 {
+      font-size: 13.5px;
+      font-weight: 700;
+      color: #166534;
+      margin: 12px 0 6px 0;
+    }
+
+    .msg-content p {
+      margin: 0 0 10px 0;
+    }
+
+    .msg-content ul, .msg-content ol {
+      margin: 6px 0 10px 0;
+      padding-left: 20px;
+    }
+
+    .msg-content li {
+      margin-bottom: 4px;
+    }
+
+    .msg-content hr {
+      border: 0;
+      border-top: 1px dashed var(--color-hairline);
+      margin: 14px 0;
+    }
+
+    .msg-content strong {
+      color: #0f172a;
+    }
+
+    .msg-time {
+      font-size: 10px;
+      color: var(--color-mute);
+      margin-top: 8px;
+      font-family: 'Geist Mono', monospace;
+    }
+
+    /* Quick Chips */
+    .chat-quick-chips-wrapper {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .chat-chip-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 14px;
+      background: #ffffff;
+      border: 1px solid var(--color-primary-border);
+      border-radius: var(--radius-pill);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--color-primary);
+      cursor: pointer;
+      transition: all 0.16s ease;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+    }
+
+    .chat-chip-btn:hover {
+      background: var(--color-primary);
+      color: #ffffff;
+      border-color: var(--color-primary);
+      transform: translateY(-1px);
+      box-shadow: 0 3px 8px rgba(21, 128, 61, 0.25);
+    }
+
+    /* Typing Indicator */
+    .chat-typing-indicator {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      padding: 10px 24px;
+      background: #f8faf9;
+      animation: fadeIn 0.2s ease;
+    }
+
+    .typing-avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      background: var(--color-primary-subtle);
+      border: 1px solid var(--color-primary-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+    }
+
+    .typing-dots-bubble {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      background: #ffffff;
+      border: 1px solid var(--color-hairline);
+      border-radius: 14px;
+      padding: 8px 14px;
+    }
+
+    .typing-dot {
+      width: 7px;
+      height: 7px;
+      background: var(--color-primary);
+      border-radius: 50%;
+      animation: typingBounce 1.4s infinite ease-in-out both;
+    }
+
+    .typing-dot:nth-child(1) { animation-delay: -0.32s; }
+    .typing-dot:nth-child(2) { animation-delay: -0.16s; }
+    .typing-dot:nth-child(3) { animation-delay: 0s; }
+
+    @keyframes typingBounce {
+      0%, 80%, 100% { transform: scale(0.6); opacity: 0.4; }
+      40% { transform: scale(1.1); opacity: 1; }
+    }
+
+    /* Chat Footer Bar */
+    .chat-footer-bar {
+      padding: 16px 22px;
+      background: #ffffff;
+      border-top: 1px solid var(--color-hairline);
+    }
+
+    .chat-input-form {
+      display: flex;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .chat-text-input {
+      flex: 1;
+      height: 46px;
+      padding: 0 18px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--color-hairline);
+      font-family: inherit;
+      font-size: 14px;
+      outline: none;
+      background: #fbfdfc;
+      transition: all 0.16s ease;
+    }
+
+    .chat-text-input:focus {
+      border-color: var(--color-primary);
+      background: #ffffff;
+      box-shadow: 0 0 0 3px var(--color-accent-glow);
+    }
+
+    .chat-send-btn {
+      height: 46px;
+      padding: 0 24px;
+      border-radius: var(--radius-pill);
+      background: linear-gradient(135deg, #15803d, #166534);
+      color: #ffffff;
+      border: none;
+      font-family: inherit;
+      font-size: 13.5px;
+      font-weight: 700;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      box-shadow: 0 2px 10px rgba(21, 128, 61, 0.25);
+      transition: all 0.16s ease;
+    }
+
+    .chat-send-btn:hover {
+      background: linear-gradient(135deg, #166534, #14532d);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 14px rgba(21, 128, 61, 0.35);
+    }
+
+    .chat-footer-hints {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11.5px;
+      color: var(--color-mute);
+      margin-top: 8px;
+      padding: 0 4px;
+    }
+
+    /* Floating Widget Button */
+    .floating-chat-toggle {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 999;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 10px 20px 10px 14px;
+      background: linear-gradient(135deg, #15803d, #166534);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      border-radius: var(--radius-pill);
+      box-shadow: 0 4px 20px rgba(21, 128, 61, 0.4);
+      cursor: pointer;
+      font-size: 13.5px;
+      font-weight: 700;
+      font-family: inherit;
+      transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .floating-chat-toggle:hover {
+      transform: translateY(-2px) scale(1.03);
+      box-shadow: 0 6px 26px rgba(21, 128, 61, 0.52);
+    }
+
+    .floating-icon-wrap {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+    }
+
+    .floating-pulse-ring {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 2px solid #86efac;
+      animation: pulseRing 2s infinite ease-out;
+    }
+
+    @keyframes pulseRing {
+      0% { transform: scale(0.9); opacity: 1; }
+      100% { transform: scale(1.8); opacity: 0; }
+    }
+
+    @media (max-width: 960px) {
+      .chat-workspace-grid {
+        grid-template-columns: 1fr;
+      }
+      .chat-sidebar {
+        display: none;
+      }
+      .chat-main-card {
+        height: 620px;
+      }
+      .floating-label {
+        display: none;
+      }
+      .floating-chat-toggle {
+        padding: 14px;
+        border-radius: 50%;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -1463,6 +2010,11 @@
           <button type="button" class="nav-tab-btn" id="tab-btn-history" onclick="switchTab('history')">
             <span>📜 Lịch sử Đo đạc</span>
           </button>
+          <button type="button" class="nav-tab-btn" id="tab-btn-chat" onclick="switchTab('chat')">
+            <span>💬 Trợ Lý Nông Nghiệp AI</span>
+            <span style="background: #15803d; color: #ffffff; font-size: 10px; font-weight: 700; padding: 2px 7px; border-radius: 999px; margin-left: 4px;">VIETSMARTAGRI</span>
+          </button>
+
         </div>
       </div>
 
@@ -2256,6 +2808,150 @@
       </div>
     </div>
 
+  
+    <!-- ====================================================================
+         TAB 5: TRỢ LÝ NÔNG NGHIỆP AI (VIETSMARTAGRI CHATBOT)
+         ==================================================================== -->
+    <div id="tab-pane-chat" class="tab-pane">
+      <div class="chat-workspace-grid">
+
+        <!-- SIDEBAR: Dữ Liệu & Chủ Đề VietSmartAgri -->
+        <aside class="chat-sidebar">
+          <div class="chat-sidebar-card">
+            <div class="card-header" style="padding-bottom: 12px; margin-bottom: 14px;">
+              <h3 class="card-title" style="font-size: 15px;">
+                <span>📚 Cơ Sở Tri Thức VietSmartAgri</span>
+              </h3>
+              <span class="card-tag">HUGGINGFACE</span>
+            </div>
+
+            <p style="font-size: 12.5px; color: var(--color-mute); line-height: 1.55; margin-bottom: 16px;">
+              Trợ lý được huấn luyện từ <strong>VietSmartAgri-Dataset</strong> (tác giả: <em>Xích Văn Luận</em>), đúc kết từ kinh nghiệm nông dân thực chiến, Viện Cây ăn quả Miền Nam (SOFRI), Viện WASI, Bộ NN&PTNT và tiêu chuẩn VietGAP/GlobalGAP.
+            </p>
+
+            <div class="chat-sidebar-section-title">CHỦ ĐỀ KỸ THUẬT TIÊU BIỂU</div>
+            <div class="chat-topic-list">
+              <button type="button" class="chat-topic-btn active" onclick="loadChatSuggestions()">
+                <span>🌱 Tất cả câu hỏi mẫu</span>
+                <span class="chat-topic-count">60</span>
+              </button>
+              <button type="button" class="chat-topic-btn" onclick="askQuickPrompt('Ruộng lúa đất hơi chua pH 5.5, vụ hè nắng nóng 31°C, giống Đài Thơm 8, nên tưới nước và bón phân thế nào để tránh úng rễ?')">
+                <span>🌾 Lúa nước & Tưới AWD</span>
+              </button>
+              <button type="button" class="chat-topic-btn" onclick="askQuickPrompt('Làm sao trị bệnh đốm nâu/nấm tắc kè (thán thư) trên thanh long ruột đỏ?')">
+                <span>🐉 Thanh long & Đốm nâu</span>
+              </button>
+              <button type="button" class="chat-topic-btn" onclick="askQuickPrompt('Cách nào trị bắp bị sâu keo mùa thu?')">
+                <span>🌽 Bắp (Ngô) & Sâu keo</span>
+              </button>
+              <button type="button" class="chat-topic-btn" onclick="askQuickPrompt('Vườn chuối già Nam Mỹ bị héo rũ Panama, lá vàng mép khô, cắt ngang thân thấy tím đen, cách xử lý thế nào?')">
+                <span>🍌 Chuối Cavendish & Panama</span>
+              </button>
+              <button type="button" class="chat-topic-btn" onclick="askQuickPrompt('Quy trình bón phân thông minh nuôi trái Sầu riêng Monthong đạt chuẩn xuất khẩu chống sượng cơm?')">
+                <span>🍈 Sầu riêng & Chống sượng</span>
+              </button>
+              <button type="button" class="chat-topic-btn" onclick="askQuickPrompt('Vườn tiêu bị chết nhanh và chết chậm, dùng cảm biến pH đất và vi sinh xử lý thế nào?')">
+                <span>🌿 Hồ tiêu & Chết nhanh</span>
+              </button>
+              <button type="button" class="chat-topic-btn" onclick="askQuickPrompt('Cà phê Robusta mùa khô nắng trên 34°C, muốn lắp hệ thống tưới thông minh qua điện thoại thế nào?')">
+                <span>☕ Cà phê Robusta & Tưới IoT</span>
+              </button>
+              <button type="button" class="chat-topic-btn" onclick="askQuickPrompt('Giải pháp khắc phục bệnh héo xanh vi khuẩn Ralstonia trên dưa hấu?')">
+                <span>🍉 Dưa hấu & Héo xanh</span>
+              </button>
+            </div>
+
+            <div style="margin-top: 18px; padding-top: 14px; border-top: 1px solid var(--color-hairline);">
+              <div class="chat-sidebar-section-title">NGUỒN DỮ LIỆU HUẤN LUYỆN</div>
+              <a href="https://huggingface.co/datasets/VanLuan01/VietSmartAgri-Dataset" target="_blank" rel="noopener noreferrer" class="hf-link-badge">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.42 2.865 8.166 6.839 9.489.5.092.682-.217.682-.482 0-.237-.008-.866-.013-1.7-2.782.603-3.369-1.34-3.369-1.34-.454-1.156-1.11-1.464-1.11-1.464-.908-.62.069-.608.069-.608 1.003.07 1.53 1.03 1.53 1.03.892 1.529 2.341 1.087 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.11-4.555-4.943 0-1.091.39-1.984 1.029-2.683-.103-.253-.446-1.27.098-2.647 0 0 .84-.269 2.75 1.025A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.294 2.747-1.025 2.747-1.025.546 1.377.202 2.394.1 2.647.64.699 1.028 1.592 1.028 2.683 0 3.842-2.339 4.687-4.566 4.935.359.309.678.919.678 1.852 0 1.336-.012 2.415-.012 2.743 0 .267.18.578.688.48C19.138 20.163 22 16.418 22 12c0-5.523-4.477-10-10-10z"/></svg>
+                <span>Hugging Face: VietSmartAgri</span>
+              </a>
+            </div>
+          </div>
+        </aside>
+
+        <!-- CHAT MAIN: Khung Chat AI Chuyên Nghiệp -->
+        <section class="card chat-main-card">
+          <!-- Chat Header -->
+          <div class="chat-main-header">
+            <div class="chat-agent-info">
+              <div class="chat-avatar-wrapper">
+                <span class="chat-avatar-icon">👨‍🌾</span>
+                <span class="chat-online-dot"></span>
+              </div>
+              <div>
+                <div class="chat-agent-name">AgriBot Assistant • Kỹ Sư Nông Học AI</div>
+                <div class="chat-agent-sub">
+                  <span class="status-live-badge">🟢 TRỰC TUYẾN 24/7</span>
+                  <span>Dữ liệu thực chiến <strong>VietSmartAgri</strong></span>
+                </div>
+              </div>
+            </div>
+            <div class="chat-actions">
+              <button type="button" class="btn-chat-action" onclick="clearChatHistory()" title="Xóa lịch sử cuộc trò chuyện">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M19 6v14a2 2 0 01-2 2H7a2 2 0 01-2-2V6m3 0V4a2 2 0 012-2h4a2 2 0 012 2v2"/></svg>
+                <span>Làm mới đoạn chat</span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Chat Messages Body -->
+          <div class="chat-messages-body" id="chatMessagesBody">
+            <div class="chat-msg chat-msg-bot">
+              <div class="msg-avatar">👨‍🌾</div>
+              <div class="msg-bubble">
+                <div class="msg-author">AgriBot AI • Chuyên Gia Nông Nghiệp</div>
+                <div class="msg-content">
+                  <p>Xin chào bà con và các bạn! 👋 Tôi là <strong>AgriBot AI</strong>, được huấn luyện dựa trên bộ dữ liệu nông nghiệp thông minh <strong>VietSmartAgri-Dataset</strong> (Hugging Face) đúc kết từ Viện SOFRI, Bộ NN&PTNT, WASI và kinh nghiệm nông dân nhiều vùng miền.</p>
+                  <p>Tôi có thể tư vấn chuyên sâu cho bạn về:</p>
+                  <ul>
+                    <li><strong>🌾 Quản lý nước & sâu bệnh hại lúa:</strong> Tưới AWD, đạo ôn, rầy nâu, xử lý ngộ độc hữu cơ, đất chua phèn mặn.</li>
+                    <li><strong>🐉 Thanh long & Cây ăn trái:</strong> Trị thán thư đốm nâu, chong đèn LED, bón K2SO4 nuôi trái sầu riêng chống sượng cơm, chuối Panama.</li>
+                    <li><strong>🌽 Hoa màu & Đậu đỗ:</strong> Sâu keo mùa thu, rỉ sắt bắp, rệp muội đậu xanh, đậu bắp xuất khẩu Nhật Bản.</li>
+                    <li><strong>🧪 Phác đồ NPK & Vi sinh:</strong> Cách tính đạm, lân, kali, bón vôi, Trichoderma, Canxi-Bo theo từng giai đoạn sinh lý.</li>
+                  </ul>
+                  <p style="margin-bottom: 0;">👉 Bạn hãy chọn câu hỏi gợi ý bên dưới hoặc gõ trực tiếp thắc mắc nhé!</p>
+                </div>
+                <div class="msg-time" id="welcomeTime">Vừa xong</div>
+              </div>
+            </div>
+
+            <!-- Quick Prompts Chips inside body -->
+            <div class="chat-quick-chips-wrapper" id="chatQuickChips">
+              <!-- Rendered via Javascript -->
+            </div>
+          </div>
+
+          <!-- Typing Indicator -->
+          <div class="chat-typing-indicator" id="chatTypingIndicator" style="display: none;">
+            <div class="typing-avatar">👨‍🌾</div>
+            <div class="typing-dots-bubble">
+              <span class="typing-dot"></span>
+              <span class="typing-dot"></span>
+              <span class="typing-dot"></span>
+              <span style="font-size: 11px; color: var(--color-mute); margin-left: 6px;">AgriBot đang suy luận theo dữ liệu VietSmartAgri...</span>
+            </div>
+          </div>
+
+          <!-- Chat Footer Bar -->
+          <div class="chat-footer-bar">
+            <form id="chatForm" onsubmit="event.preventDefault(); submitChatMessage();" class="chat-input-form">
+              <input type="text" id="chatInput" class="chat-text-input" placeholder="Hỏi về sâu bệnh, bón phân NPK, tưới nước, cải tạo đất, chọn giống... (Enter để gửi)" autocomplete="off">
+              <button type="submit" id="btnChatSend" class="chat-send-btn" title="Gửi câu hỏi">
+                <span>Gửi</span>
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"><line x1="22" y1="2" x2="11" y2="13"></line><polygon points="22 2 15 22 11 13 2 9 22 2"></polygon></svg>
+              </button>
+            </form>
+            <div class="chat-footer-hints">
+              <span>💡 Mẹo: Nhập tên cây (Lúa, Bắp, Thanh long, Sầu riêng, Chuối...) hoặc triệu chứng bệnh để nhận phác đồ từng bước.</span>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </div>
+
   </main>
 
   <!-- Lightbox Modal for Fullscreen Plot Inspection -->
@@ -2420,6 +3116,12 @@
         if (heroHeadline) heroHeadline.textContent = 'Lịch Sử Đo Đạc & Khuyến Nghị Cây Trồng';
         if (heroSubtitle) heroSubtitle.textContent = 'Theo dõi chu kỳ biến động dinh dưỡng đất qua các vụ mùa và quản lý các phác đồ bón phân đã đề xuất.';
         loadHistory();
+      } else if (tabId === 'chat') {
+        if (presetsBar) presetsBar.style.display = 'none';
+        if (heroEyebrow) heroEyebrow.textContent = 'Hỏi Đáp Nông Học Thông Minh • Huấn Luyện Từ VietSmartAgri-Dataset';
+        if (heroHeadline) heroHeadline.textContent = 'Trợ Lý Kỹ Sư Nông Nghiệp AI';
+        if (heroSubtitle) heroSubtitle.textContent = 'Hỏi đáp kỹ thuật canh tác, tưới nước ngập khô AWD, phác đồ bón phân NPK, phòng trừ sâu bệnh hại thực tế dựa trên kinh nghiệm nông dân và tiêu chuẩn SOFRI, Bộ NN&PTNT, VietGAP.';
+        loadChatSuggestions();
       }
     }
 
@@ -3157,6 +3859,190 @@
     window.addEventListener('DOMContentLoaded', () => {
       triggerPrediction();
     });
+  
+    // ==============================================================================
+    // VIETSMARTAGRI AI CHATBOT CONTROLLER
+    // ==============================================================================
+    let chatHistory = [];
+
+    async function loadChatSuggestions() {
+      try {
+        const res = await fetch('/api/chat/suggestions');
+        const data = await res.json();
+        if (data.status === 'success' && data.suggestions) {
+          renderChatChips(data.suggestions);
+        }
+      } catch (err) {
+        console.error('Error loading suggestions:', err);
+      }
+    }
+
+    function renderChatChips(chips) {
+      const container = document.getElementById('chatQuickChips');
+      if (!container) return;
+      container.innerHTML = '';
+      chips.forEach(c => {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'chat-chip-btn';
+        btn.innerHTML = `<span>${c.icon || '🌱'}</span><span>${c.text}</span>`;
+        btn.onclick = () => askQuickPrompt(c.text);
+        container.appendChild(btn);
+      });
+    }
+
+    function askQuickPrompt(text) {
+      const inp = document.getElementById('chatInput');
+      if (inp) {
+        inp.value = text;
+        submitChatMessage();
+      }
+    }
+
+    function formatMarkdown(text) {
+      if (!text) return '';
+      // Escape basic html
+      let html = text
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;');
+
+      // Headers
+      html = html.replace(/^### (.*$)/gim, '<h3>$1</h3>');
+      html = html.replace(/^#### (.*$)/gim, '<h4>$1</h4>');
+      // Bold & Italic
+      html = html.replace(/\*\*(.*?)\*\*/gim, '<strong>$1</strong>');
+      html = html.replace(/\*(.*?)\*/gim, '<em>$1</em>');
+      // Code
+      html = html.replace(/`(.*?)`/gim, '<code>$1</code>');
+      // Lists
+      html = html.replace(/^- (.*$)/gim, '<li>$1</li>');
+      // Line breaks
+      html = html.replace(/\n/g, '<br>');
+      return html;
+    }
+
+    async function submitChatMessage() {
+      const inputEl = document.getElementById('chatInput');
+      if (!inputEl) return;
+      const message = inputEl.value.trim();
+      if (!message) return;
+
+      inputEl.value = '';
+      appendChatMessage('user', message);
+
+      const typingEl = document.getElementById('chatTypingIndicator');
+      if (typingEl) typingEl.style.display = 'flex';
+      scrollChatToBottom();
+
+      try {
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: message, history: chatHistory })
+        });
+        const data = await response.json();
+
+        if (typingEl) typingEl.style.display = 'none';
+
+        if (data.status === 'success') {
+          appendChatMessage('bot', data.reply, data.source);
+          chatHistory.push({ role: 'user', content: message });
+          chatHistory.push({ role: 'assistant', content: data.reply });
+
+          if (data.suggestions && data.suggestions.length > 0) {
+            renderChatChips(data.suggestions);
+          }
+        } else {
+          appendChatMessage('bot', data.reply || 'Xin lỗi, hệ thống đang bận. Bạn vui lòng thử lại sau giây lát!');
+        }
+      } catch (err) {
+        if (typingEl) typingEl.style.display = 'none';
+        console.error('Chat fetch error:', err);
+        appendChatMessage('bot', '⚠️ Không thể kết nối tới máy chủ AI. Vui lòng kiểm tra lại mạng hoặc thử lại sau!');
+      }
+
+      scrollChatToBottom();
+    }
+
+    function appendChatMessage(sender, text, source) {
+      const bodyEl = document.getElementById('chatMessagesBody');
+      if (!bodyEl) return;
+
+      const msgDiv = document.createElement('div');
+      msgDiv.className = `chat-msg chat-msg-${sender}`;
+
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' });
+
+      if (sender === 'user') {
+        msgDiv.innerHTML = `
+          <div class="msg-bubble">
+            <div class="msg-content">${text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')}</div>
+            <div class="msg-time">${timeStr}</div>
+          </div>
+        `;
+      } else {
+        const formatted = formatMarkdown(text);
+        msgDiv.innerHTML = `
+          <div class="msg-avatar">👨‍🌾</div>
+          <div class="msg-bubble">
+            <div class="msg-author">AgriBot AI • Chuyên Gia Nông Nghiệp</div>
+            <div class="msg-content">${formatted}</div>
+            <div class="msg-time">${timeStr}</div>
+          </div>
+        `;
+      }
+
+      bodyEl.appendChild(msgDiv);
+      scrollChatToBottom();
+    }
+
+    function scrollChatToBottom() {
+      const bodyEl = document.getElementById('chatMessagesBody');
+      if (bodyEl) {
+        bodyEl.scrollTop = bodyEl.scrollHeight;
+      }
+    }
+
+    function clearChatHistory() {
+      chatHistory = [];
+      const bodyEl = document.getElementById('chatMessagesBody');
+      if (!bodyEl) return;
+      bodyEl.innerHTML = `
+        <div class="chat-msg chat-msg-bot">
+          <div class="msg-avatar">👨‍🌾</div>
+          <div class="msg-bubble">
+            <div class="msg-author">AgriBot AI • Chuyên Gia Nông Nghiệp</div>
+            <div class="msg-content">
+              <p>Lịch sử đoạn chat đã được làm mới! Tôi sẵn sàng tư vấn câu hỏi mới cho bà con và các bạn.</p>
+            </div>
+            <div class="msg-time">${new Date().toLocaleTimeString('vi-VN', { hour: '2-digit', minute: '2-digit' })}</div>
+          </div>
+        </div>
+        <div class="chat-quick-chips-wrapper" id="chatQuickChips"></div>
+      `;
+      loadChatSuggestions();
+      showToast('Đã làm mới đoạn chat!', 'info');
+    }
+
+    function toggleFloatingChat() {
+      switchTab('chat');
+      const inputEl = document.getElementById('chatInput');
+      if (inputEl) {
+        setTimeout(() => inputEl.focus(), 250);
+      }
+    }
+
   </script>
+  <!-- Floating Chat Toggle for fast access from any tab -->
+  <button type="button" id="floatingChatToggle" class="floating-chat-toggle" onclick="toggleFloatingChat()" title="Chat với Chuyên Gia Nông Nghiệp AI">
+    <div class="floating-icon-wrap">
+      <span class="floating-emoji">💬</span>
+      <span class="floating-pulse-ring"></span>
+    </div>
+    <span class="floating-label">Hỏi Kỹ Sư AI (VietSmartAgri)</span>
+  </button>
+
 </body>
 </html>

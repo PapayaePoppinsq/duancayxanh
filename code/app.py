@@ -30,6 +30,7 @@ if sys.platform.startswith('win'):
 
 from predict import predict_crop_recommendation, get_model_and_scaler
 from advisor import CROP_DETAILS, CROP_OPTIMAL_REQUIREMENTS
+from agribot_chat import agribot_chat, get_quick_suggestions
 
 app = Flask(__name__)
 # Secret key cố định từ biến môi trường để giữ phiên đăng nhập ổn định trên Cloud
@@ -319,6 +320,35 @@ def api_dataset_preview():
         })
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 400
+
+# ==============================================================================
+# API TRỢ LÝ CHUYÊN GIA NÔNG NGHIỆP AI (VIETSMARTAGRI CHATBOT)
+# ==============================================================================
+
+@app.route('/api/chat', methods=['POST'])
+def api_chat():
+    """Nhận câu hỏi từ người dùng và trả về tư vấn nông học thực chiến."""
+    try:
+        data = request.get_json(silent=True) or {}
+        message = data.get('message', '').strip()
+        history = data.get('history', [])
+        
+        response_data = agribot_chat(message, history=history)
+        return jsonify(response_data)
+    except Exception as e:
+        return jsonify({
+            'status': 'error',
+            'reply': f'Hệ thống đang bận hoặc gặp sự cố: {str(e)}. Vui lòng thử lại sau giây lát!'
+        }), 500
+
+@app.route('/api/chat/suggestions', methods=['GET'])
+def api_chat_suggestions():
+    """Lấy danh sách các câu hỏi gợi ý nhanh từ VietSmartAgri."""
+    try:
+        suggestions = get_quick_suggestions()
+        return jsonify({'status': 'success', 'suggestions': suggestions})
+    except Exception as e:
+        return jsonify({'status': 'error', 'message': str(e)}), 500
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 5000))
