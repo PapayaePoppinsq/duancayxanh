@@ -32,7 +32,8 @@ from predict import predict_crop_recommendation, get_model_and_scaler
 from advisor import CROP_DETAILS, CROP_OPTIMAL_REQUIREMENTS
 
 app = Flask(__name__)
-app.secret_key = os.urandom(24)  # Secret key for session management
+# Secret key cố định từ biến môi trường để giữ phiên đăng nhập ổn định trên Cloud
+app.secret_key = os.environ.get('SECRET_KEY', 'agribot-super-secret-session-key-2024')
 
 # Initialize SQLite DB and Flask-Login
 init_db()
@@ -276,7 +277,13 @@ def api_dataset_preview():
         else:
             filtered_df = df
             
-        sample_rows = filtered_df.sample(min(20, len(filtered_df)), random_state=42).to_dict(orient='records')
+        sample_rows = filtered_df.sample(min(25, len(filtered_df)), random_state=42).to_dict(orient='records')
+        for row in sample_rows:
+            lbl = str(row.get('label', '')).lower()
+            meta = CROP_DETAILS.get(lbl, {})
+            row['name_vi'] = meta.get('name_vi', lbl.capitalize())
+            row['emoji'] = meta.get('emoji', '🌱')
+            row['category'] = meta.get('category', 'Cây trồng')
         
         # Thống kê nhanh theo cây
         crops_list = []
@@ -287,21 +294,34 @@ def api_dataset_preview():
                 'id': crop_id,
                 'name_vi': meta.get('name_vi', crop_id),
                 'emoji': meta.get('emoji', '🌱'),
+                'category': meta.get('category', 'Cây trồng'),
                 'optimal': req
             })
+            
+        stats = {
+            'N_mean': round(float(filtered_df['N'].mean()), 1),
+            'P_mean': round(float(filtered_df['P'].mean()), 1),
+            'K_mean': round(float(filtered_df['K'].mean()), 1),
+            'temp_mean': round(float(filtered_df['temperature'].mean()), 1),
+            'humidity_mean': round(float(filtered_df['humidity'].mean()), 1),
+            'ph_mean': round(float(filtered_df['ph'].mean()), 2),
+            'rainfall_mean': round(float(filtered_df['rainfall'].mean()), 1),
+        }
             
         return jsonify({
             'status': 'success',
             'total_samples': total_rows,
+            'filtered_count': len(filtered_df),
             'crops_count': len(crops_list),
             'crops': crops_list,
-            'samples': sample_rows
+            'samples': sample_rows,
+            'stats': stats
         })
     except Exception as e:
         return jsonify({'status': 'error', 'message': str(e)}), 400
 
 if __name__ == '__main__':
-    port = 5000
+    port = int(os.environ.get('PORT', 5000))
     print("\n" + "="*65)
     print(" 🌾 HỆ THỐNG KHUYẾN NGHỊ CÂY TRỒNG AGRIBOT AI ECO-GREEN ĐANG KHỞI CHẠY 🌾")
     print("="*65)

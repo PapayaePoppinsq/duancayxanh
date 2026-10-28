@@ -3,12 +3,21 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>AgriBot AI — Hệ Thống Khuyến Nghị Cây Trồng Thông Minh</title>
+  <title>AgriBot AI — Hệ Thống Khuyến Nghị Cây Trồng Thông Minh & Nông Nghiệp Xanh</title>
   
   <!-- Typography: Geist & Geist Mono via Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Geist:wght@300;400;500;600;700&family=Geist+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Chart.js for Interactive Agricultural & ML Visualizations -->
+  <script src="{{ url_for('static', filename='js/chart.umd.min.js') }}"></script>
+  <script>
+    // Fallback if local Chart.js fails to load
+    if (typeof Chart === 'undefined') {
+      document.write('<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"><\/script>');
+    }
+  </script>
 
   <style>
     /* ==========================================================================
@@ -16,7 +25,6 @@
        Primary Color: Emerald Forest Green (#15803d)
        ========================================================================== */
     :root {
-      /* Primary Emerald / Forest Green Palette */
       --color-primary: #15803d;
       --color-primary-hover: #166534;
       --color-primary-active: #14532d;
@@ -49,23 +57,19 @@
       --color-info-bg: #f0f9ff;
       --color-info-border: #bae6fd;
 
-      /* Typography */
       --font-sans: 'Geist', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
       --font-mono: 'Geist Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
 
-      /* Radii */
       --radius-xs: 4px;
       --radius-sm: 8px;
       --radius-md: 14px;
       --radius-lg: 18px;
       --radius-pill: 100px;
 
-      /* Shadows */
       --shadow-whisper: 0px 1px 3px rgba(16, 75, 40, 0.04);
       --shadow-float: 0px 8px 24px -4px rgba(22, 101, 52, 0.08), 0 0 1px 1px rgba(22, 101, 52, 0.04);
       --shadow-card: 0px 12px 32px -6px rgba(22, 101, 52, 0.1), 0 0 1px 1px rgba(22, 101, 52, 0.05);
 
-      /* Spacing */
       --space-xxs: 4px;
       --space-xs: 8px;
       --space-sm: 12px;
@@ -115,17 +119,17 @@
     /* Top Navigation Bar */
     .nav-bar {
       width: 100%;
-      background: rgba(246, 251, 247, 0.88);
+      background: rgba(246, 251, 247, 0.92);
       border-bottom: 1px solid var(--color-hairline);
       position: sticky;
       top: 0;
       z-index: 100;
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
     }
 
     .nav-container {
-      max-width: 1240px;
+      max-width: 1280px;
       margin: 0 auto;
       padding: 12px 24px;
       display: flex;
@@ -148,56 +152,59 @@
       color: var(--color-ink);
       font-weight: 700;
       font-size: 17px;
-      letter-spacing: -0.4px;
+      letter-spacing: -0.3px;
     }
 
     .brand-icon {
-      width: 34px;
-      height: 34px;
-      border-radius: 10px;
+      width: 32px;
+      height: 32px;
+      border-radius: var(--radius-sm);
       background: linear-gradient(135deg, #22c55e 0%, #15803d 100%);
       display: flex;
       align-items: center;
       justify-content: center;
-      box-shadow: 0 4px 12px rgba(22, 101, 52, 0.25);
+      box-shadow: 0 2px 8px rgba(22, 101, 52, 0.3);
     }
 
     .brand-icon svg {
       width: 18px;
       height: 18px;
-      stroke: #ffffff;
       fill: none;
+      stroke: #ffffff;
       stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
     }
 
     .nav-tabs {
       display: flex;
-      align-items: center;
-      gap: 4px;
-      background: #edf7ef;
-      border: 1px solid var(--color-hairline);
+      background: #edf6ef;
       padding: 3px;
       border-radius: var(--radius-pill);
+      border: 1px solid var(--color-hairline);
+      gap: 2px;
     }
 
     .nav-tab-btn {
-      padding: 6px 14px;
-      border-radius: var(--radius-pill);
-      border: none;
       background: transparent;
-      color: var(--color-body);
+      border: none;
+      font-family: inherit;
       font-size: 13px;
       font-weight: 500;
-      font-family: inherit;
+      color: var(--color-mute);
+      padding: 6px 14px;
+      border-radius: var(--radius-pill);
       cursor: pointer;
+      transition: all 0.16s ease;
       display: flex;
       align-items: center;
       gap: 6px;
-      transition: all 0.16s ease;
+      text-decoration: none;
     }
 
     .nav-tab-btn:hover {
-      color: var(--color-primary);
+      color: var(--color-ink);
+      background: rgba(255, 255, 255, 0.6);
     }
 
     .nav-tab-btn.active {
@@ -217,13 +224,13 @@
       display: flex;
       align-items: center;
       gap: 8px;
-      padding: 4px 12px 4px 6px;
-      background: var(--color-canvas-elevated);
+      padding: 5px 12px 5px 6px;
+      background: #ffffff;
       border: 1px solid var(--color-hairline);
       border-radius: var(--radius-pill);
-      font-size: 12px;
-      font-weight: 500;
+      font-size: 13px;
       color: var(--color-body);
+      font-weight: 500;
     }
 
     .user-avatar {
@@ -232,11 +239,11 @@
       border-radius: 50%;
       background: var(--color-primary-light);
       color: var(--color-primary);
-      font-weight: 700;
       display: flex;
       align-items: center;
       justify-content: center;
       font-size: 11px;
+      font-weight: 700;
     }
 
     .btn-logout {
@@ -246,8 +253,9 @@
       padding: 6px 12px;
       border-radius: var(--radius-pill);
       border: 1px solid var(--color-hairline);
-      background: var(--color-canvas-elevated);
+      background: #ffffff;
       transition: all 0.15s ease;
+      cursor: pointer;
     }
 
     .btn-logout:hover {
@@ -256,51 +264,53 @@
       background: var(--color-error-bg);
     }
 
-    /* Hero Section */
-    .hero-wrapper {
+    /* Main Container */
+    .container {
+      max-width: 1280px;
+      margin: 0 auto;
+      padding: 24px;
+      width: 100%;
       position: relative;
-      padding: 40px 24px 28px;
-      text-align: center;
       z-index: 1;
+      flex: 1;
     }
 
-    .hero-content {
-      max-width: 820px;
-      margin: 0 auto;
+    /* Hero Header */
+    .hero-wrapper {
+      text-align: center;
+      margin-bottom: 28px;
     }
 
     .mono-eyebrow {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      font-weight: 600;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      color: var(--color-primary);
-      margin-bottom: 8px;
       display: inline-flex;
       align-items: center;
       gap: 6px;
       padding: 4px 12px;
-      background: var(--color-primary-subtle);
-      border: 1px solid var(--color-primary-border);
       border-radius: var(--radius-pill);
+      background-color: var(--color-primary-subtle);
+      border: 1px solid var(--color-primary-border);
+      color: var(--color-primary);
+      font-size: 11px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.06em;
+      margin-bottom: 12px;
     }
 
     .hero-headline {
-      font-size: 38px;
-      line-height: 44px;
-      font-weight: 700;
-      letter-spacing: -1px;
+      font-size: 34px;
+      font-weight: 800;
+      letter-spacing: -0.8px;
       color: var(--color-ink);
-      margin-bottom: 12px;
+      margin-bottom: 8px;
     }
 
     .hero-subtitle {
       font-size: 15px;
-      line-height: 24px;
       color: var(--color-body);
-      max-width: 660px;
-      margin: 0 auto 24px;
+      max-width: 720px;
+      margin: 0 auto 20px auto;
+      line-height: 22px;
     }
 
     /* Region Presets Bar */
@@ -310,37 +320,38 @@
       justify-content: center;
       flex-wrap: wrap;
       gap: 8px;
+      margin-top: 14px;
     }
 
     .preset-label {
       font-size: 12px;
       font-weight: 600;
       color: var(--color-mute);
-      margin-right: 4px;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.04em;
+      margin-right: 4px;
     }
 
     .preset-pill {
+      background: #ffffff;
+      border: 1px solid var(--color-hairline);
+      color: var(--color-body);
+      font-family: inherit;
       font-size: 13px;
       font-weight: 500;
-      font-family: inherit;
       padding: 6px 14px;
       border-radius: var(--radius-pill);
-      background: var(--color-canvas-elevated);
-      color: var(--color-body);
-      border: 1px solid var(--color-hairline);
       cursor: pointer;
       transition: all 0.16s ease;
       display: inline-flex;
       align-items: center;
       gap: 6px;
-      box-shadow: var(--shadow-whisper);
     }
 
     .preset-pill:hover {
       border-color: var(--color-primary-border);
       color: var(--color-primary);
+      background: var(--color-primary-subtle);
       transform: translateY(-1px);
     }
 
@@ -348,55 +359,44 @@
       background: var(--color-primary);
       color: #ffffff;
       border-color: var(--color-primary);
-      box-shadow: 0 4px 12px rgba(22, 101, 52, 0.25);
+      box-shadow: 0 2px 8px rgba(22, 101, 52, 0.28);
     }
 
-    /* Main Container */
-    .container {
-      max-width: 1240px;
-      margin: 0 auto;
-      padding: 0 24px 60px;
-      position: relative;
-      z-index: 1;
-      width: 100%;
-    }
-
-    /* Grid Layout for Tab 1 */
+    /* Main Grid Layout for Tab 1 */
     .main-grid {
       display: grid;
       grid-template-columns: 460px 1fr;
-      gap: 28px;
+      gap: 24px;
       align-items: start;
     }
 
-    @media (max-width: 1024px) {
+    @media (max-width: 992px) {
       .main-grid {
         grid-template-columns: 1fr;
       }
     }
 
-    /* Card Base */
+    /* Common Card Styling */
     .card {
       background: var(--color-canvas-elevated);
       border: 1px solid var(--color-hairline);
-      border-radius: var(--radius-md);
-      box-shadow: var(--shadow-float);
-      padding: 26px;
-      transition: all 0.2s ease;
+      border-radius: var(--radius-lg);
+      padding: 24px;
+      box-shadow: var(--shadow-card);
+      position: relative;
     }
 
     .card-header {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      margin-bottom: 20px;
-      padding-bottom: 14px;
-      border-bottom: 1px solid var(--color-hairline);
+      align-items: center;
+      margin-bottom: 18px;
     }
 
     .card-title {
-      font-size: 16px;
+      font-size: 17px;
       font-weight: 700;
+      letter-spacing: -0.3px;
       color: var(--color-ink);
       display: flex;
       align-items: center;
@@ -404,24 +404,24 @@
     }
 
     .card-tag {
-      font-family: var(--font-mono);
       font-size: 11px;
+      font-family: var(--font-mono);
       font-weight: 600;
-      color: var(--color-primary);
-      background: var(--color-primary-subtle);
-      border: 1px solid var(--color-primary-border);
       padding: 3px 8px;
       border-radius: var(--radius-pill);
+      background: var(--color-primary-subtle);
+      color: var(--color-primary);
+      border: 1px solid var(--color-primary-border);
     }
 
-    /* Form Styles */
+    /* Form Fields */
     .section-eyebrow {
-      font-size: 12px;
+      font-size: 11px;
       font-weight: 700;
-      color: var(--color-primary);
       text-transform: uppercase;
-      letter-spacing: 0.06em;
-      margin: 18px 0 10px;
+      letter-spacing: 0.08em;
+      color: var(--color-primary);
+      margin: 18px 0 10px 0;
       display: flex;
       align-items: center;
       gap: 6px;
@@ -434,29 +434,27 @@
     .form-row {
       display: grid;
       gap: 12px;
-      margin-bottom: 12px;
+      margin-bottom: 14px;
     }
 
     .form-row.cols-3 { grid-template-columns: repeat(3, 1fr); }
     .form-row.cols-2 { grid-template-columns: repeat(2, 1fr); }
 
-    @media (max-width: 540px) {
-      .form-row.cols-3 { grid-template-columns: 1fr; }
-      .form-row.cols-2 { grid-template-columns: 1fr; }
-    }
-
     .field-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
       background: #fafdfa;
       border: 1px solid var(--color-hairline);
       border-radius: var(--radius-sm);
       padding: 10px 12px;
-      transition: all 0.16s ease;
+      transition: all 0.15s ease;
     }
 
     .field-group:focus-within {
-      border-color: var(--color-primary);
-      box-shadow: 0 0 0 2px rgba(34, 197, 94, 0.15);
+      border-color: var(--color-primary-border);
       background: #ffffff;
+      box-shadow: 0 0 0 3px var(--color-accent-glow);
     }
 
     .field-label {
@@ -466,17 +464,16 @@
       font-size: 12px;
       font-weight: 600;
       color: var(--color-body);
-      margin-bottom: 6px;
     }
 
     .field-unit {
-      font-family: var(--font-mono);
       font-size: 10px;
+      font-family: var(--font-mono);
       color: var(--color-mute);
     }
 
     .input-wrapper {
-      margin-bottom: 8px;
+      position: relative;
     }
 
     .text-input {
@@ -486,7 +483,7 @@
       color: var(--color-ink);
       border: 1px solid var(--color-hairline);
       border-radius: var(--radius-xs);
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 600;
       font-family: var(--font-mono);
       padding: 0 10px;
@@ -508,6 +505,7 @@
       border-radius: var(--radius-pill);
       outline: none;
       cursor: pointer;
+      margin-top: 2px;
     }
 
     .range-slider::-webkit-slider-thumb {
@@ -524,7 +522,7 @@
     }
 
     .range-slider::-webkit-slider-thumb:hover {
-      transform: scale(1.2);
+      transform: scale(1.25);
       background: var(--color-accent);
     }
 
@@ -541,7 +539,7 @@
       color: #ffffff;
       border: 1px solid #15803d;
       border-radius: var(--radius-pill);
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 600;
       font-family: inherit;
       cursor: pointer;
@@ -578,6 +576,29 @@
       color: var(--color-ink);
     }
 
+    .btn-print {
+      height: 46px;
+      padding: 0 16px;
+      background: #ffffff;
+      color: var(--color-primary);
+      border: 1px solid var(--color-primary-border);
+      border-radius: var(--radius-pill);
+      font-size: 13px;
+      font-weight: 600;
+      font-family: inherit;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.15s ease;
+    }
+
+    .btn-print:hover {
+      background: var(--color-primary-subtle);
+      border-color: var(--color-primary);
+      transform: translateY(-1px);
+    }
+
     /* RIGHT COLUMN: Results Section */
     .result-section {
       display: flex;
@@ -590,7 +611,7 @@
       background: linear-gradient(145deg, #ffffff 0%, #f3faf4 100%);
       border: 1.5px solid var(--color-primary-border);
       border-radius: var(--radius-lg);
-      padding: 26px;
+      padding: 24px;
       box-shadow: var(--shadow-card);
       position: relative;
       overflow: hidden;
@@ -601,10 +622,17 @@
       position: absolute;
       top: 0;
       right: 0;
-      width: 140px;
-      height: 140px;
-      background: radial-gradient(circle, rgba(34, 197, 94, 0.16) 0%, transparent 70%);
+      width: 160px;
+      height: 160px;
+      background: radial-gradient(circle, rgba(34, 197, 94, 0.18) 0%, transparent 70%);
       pointer-events: none;
+    }
+
+    .top1-header-bar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
     }
 
     .top1-badge-pill {
@@ -619,7 +647,6 @@
       font-weight: 700;
       text-transform: uppercase;
       letter-spacing: 0.08em;
-      margin-bottom: 14px;
       box-shadow: 0 2px 8px rgba(22, 101, 52, 0.25);
     }
 
@@ -653,26 +680,26 @@
     }
 
     .top1-percentage {
-      font-family: var(--font-mono);
       font-size: 36px;
       font-weight: 800;
+      font-family: var(--font-mono);
       color: var(--color-primary);
       line-height: 1;
     }
 
     .top1-percentage-sub {
       font-size: 11px;
-      color: var(--color-mute);
+      font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.06em;
+      letter-spacing: 0.08em;
+      color: var(--color-mute);
       margin-top: 4px;
       display: block;
     }
 
-    /* Progress Track */
     .progress-track {
       width: 100%;
-      height: 10px;
+      height: 8px;
       background: #dcfce7;
       border-radius: var(--radius-pill);
       overflow: hidden;
@@ -686,7 +713,6 @@
       transition: width 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     }
 
-    /* Meta Spec Grid */
     .meta-spec-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -695,6 +721,7 @@
       background: #ffffff;
       border: 1px solid var(--color-hairline);
       border-radius: var(--radius-md);
+      margin-bottom: 14px;
     }
 
     .spec-item {
@@ -705,8 +732,8 @@
 
     .spec-key {
       font-size: 11px;
-      font-weight: 600;
       color: var(--color-mute);
+      font-weight: 600;
       text-transform: uppercase;
       letter-spacing: 0.04em;
     }
@@ -718,45 +745,57 @@
     }
 
     .top1-tips-box {
-      margin-top: 14px;
+      display: flex;
+      gap: 10px;
       padding: 12px 14px;
-      background: #ecfdf3;
-      border: 1px solid #bbf7d0;
+      background: #f0fdf4;
+      border: 1px solid var(--color-primary-border);
       border-radius: var(--radius-sm);
       font-size: 13px;
-      line-height: 20px;
+      line-height: 19px;
       color: #166534;
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
     }
 
-    /* Runners Grid (Top 2 & 3) */
+    /* Radar Chart Card */
+    .radar-card {
+      background: #ffffff;
+      border: 1px solid var(--color-hairline);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow-card);
+    }
+
+    .chart-container-wrapper {
+      position: relative;
+      height: 290px;
+      width: 100%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Runners-up Grid */
     .runners-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
       gap: 14px;
     }
 
-    @media (max-width: 600px) {
-      .runners-grid { grid-template-columns: 1fr; }
-    }
-
     .runner-card {
-      background: var(--color-canvas-elevated);
+      background: #ffffff;
       border: 1px solid var(--color-hairline);
       border-radius: var(--radius-md);
-      padding: 16px;
+      padding: 14px 16px;
       display: flex;
       align-items: center;
       justify-content: space-between;
-      box-shadow: var(--shadow-whisper);
-      transition: transform 0.15s ease;
+      gap: 12px;
+      transition: all 0.15s ease;
     }
 
     .runner-card:hover {
-      transform: translateY(-1px);
       border-color: var(--color-primary-border);
+      background: #fbfdfb;
     }
 
     .runner-left {
@@ -766,21 +805,20 @@
     }
 
     .runner-rank {
-      font-family: var(--font-mono);
       font-size: 12px;
       font-weight: 700;
       color: var(--color-primary);
-      background: var(--color-primary-light);
-      width: 28px;
-      height: 28px;
+      width: 26px;
+      height: 26px;
       border-radius: 50%;
+      background: var(--color-primary-light);
       display: flex;
       align-items: center;
       justify-content: center;
     }
 
     .runner-name {
-      font-size: 15px;
+      font-size: 14px;
       font-weight: 700;
       color: var(--color-ink);
     }
@@ -792,25 +830,25 @@
 
     .runner-prob {
       font-family: var(--font-mono);
-      font-size: 16px;
       font-weight: 700;
+      font-size: 14px;
       color: var(--color-primary);
     }
 
-    /* Fertilizer & NPK Advisory Card */
+    /* NPK Fertilizer Balance Card */
     .fertilizer-card {
       background: #ffffff;
       border: 1px solid var(--color-hairline);
-      border-radius: var(--radius-md);
-      padding: 22px;
-      box-shadow: var(--shadow-whisper);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow-card);
     }
 
     .fertilizer-header {
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      margin-bottom: 16px;
+      align-items: center;
+      margin-bottom: 14px;
     }
 
     .fertilizer-title {
@@ -825,91 +863,93 @@
     .npk-balance-grid {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
-      gap: 10px;
-      margin-bottom: 16px;
+      gap: 12px;
+      margin-bottom: 14px;
     }
 
     .npk-box {
+      background: #f8faf9;
       border: 1px solid var(--color-hairline);
       border-radius: var(--radius-sm);
-      padding: 10px;
+      padding: 12px;
       text-align: center;
-      background: #f8faf8;
     }
 
     .npk-box-title {
       font-size: 11px;
       font-weight: 700;
-      color: var(--color-mute);
       text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--color-mute);
       margin-bottom: 4px;
     }
 
     .npk-box-val {
       font-family: var(--font-mono);
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 700;
       color: var(--color-ink);
+      margin-bottom: 4px;
     }
 
     .npk-box-diff {
       font-size: 11px;
       font-weight: 600;
-      margin-top: 3px;
+      padding: 2px 8px;
+      border-radius: var(--radius-pill);
+      display: inline-block;
     }
 
-    .diff-deficit { color: #d97706; }
-    .diff-surplus { color: #dc2626; }
-    .diff-balanced { color: #15803d; }
+    .diff-balanced { background: #dcfce7; color: #15803d; }
+    .diff-deficit { background: #fee2e2; color: #dc2626; }
+    .diff-surplus { background: #fef3c7; color: #b45309; }
 
     .fert-plan-list {
       display: flex;
       flex-direction: column;
       gap: 8px;
-      font-size: 13px;
-      line-height: 19px;
     }
 
     .fert-plan-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 8px;
+      font-size: 12px;
+      line-height: 18px;
       padding: 8px 12px;
-      border-radius: var(--radius-sm);
-      background: #f4fbf5;
+      background: #fafdfa;
       border-left: 3px solid var(--color-primary);
+      border-radius: 0 var(--radius-xs) var(--radius-xs) 0;
+      color: var(--color-body);
     }
 
-    /* Soil Telemetry Card */
+    /* Telemetry Diagnostics Card */
     .telemetry-card {
       background: #ffffff;
       border: 1px solid var(--color-hairline);
-      border-radius: var(--radius-md);
-      padding: 22px;
-      box-shadow: var(--shadow-whisper);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow-card);
     }
 
     .telemetry-title {
-      font-size: 14px;
+      font-size: 15px;
       font-weight: 700;
       color: var(--color-ink);
+      margin-bottom: 12px;
       display: flex;
-      align-items: center;
       justify-content: space-between;
-      margin-bottom: 14px;
+      align-items: center;
     }
 
     .telemetry-list {
       list-style: none;
       display: flex;
       flex-direction: column;
-      gap: 10px;
-      font-size: 13px;
-      line-height: 20px;
-      color: var(--color-body);
+      gap: 8px;
     }
 
     .telemetry-list li {
+      font-size: 13px;
+      line-height: 19px;
+      color: var(--color-body);
       display: flex;
       align-items: flex-start;
       gap: 8px;
@@ -920,13 +960,13 @@
       font-weight: 700;
     }
 
-    /* Feature Importance Section */
+    /* Feature Importance Card */
     .feature-importance-card {
       background: #ffffff;
       border: 1px solid var(--color-hairline);
-      border-radius: var(--radius-md);
-      padding: 22px;
-      box-shadow: var(--shadow-whisper);
+      border-radius: var(--radius-lg);
+      padding: 20px;
+      box-shadow: var(--shadow-card);
     }
 
     .fi-item {
@@ -934,11 +974,11 @@
       align-items: center;
       gap: 12px;
       margin-bottom: 10px;
+      font-size: 12px;
     }
 
     .fi-name {
       width: 170px;
-      font-size: 12px;
       font-weight: 600;
       color: var(--color-body);
       white-space: nowrap;
@@ -948,7 +988,7 @@
 
     .fi-bar-track {
       flex: 1;
-      height: 8px;
+      height: 7px;
       background: #e6f4ea;
       border-radius: var(--radius-pill);
       overflow: hidden;
@@ -961,7 +1001,7 @@
     }
 
     .fi-val {
-      width: 50px;
+      width: 48px;
       font-family: var(--font-mono);
       font-size: 12px;
       font-weight: 700;
@@ -969,13 +1009,144 @@
       text-align: right;
     }
 
-    /* Tab Panes (Tab 2: EDA, Tab 3: Benchmark, Tab 4: History) */
+    /* Tab Panes */
     .tab-pane {
       display: none;
     }
 
     .tab-pane.active {
       display: block;
+    }
+
+    /* Stat Cards Grid */
+    .stat-cards-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    @media (max-width: 768px) {
+      .stat-cards-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+
+    .stat-card {
+      background: #ffffff;
+      border: 1px solid var(--color-hairline);
+      border-radius: var(--radius-md);
+      padding: 16px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      box-shadow: var(--shadow-whisper);
+    }
+
+    .stat-icon {
+      width: 42px;
+      height: 42px;
+      border-radius: var(--radius-sm);
+      background: var(--color-primary-subtle);
+      border: 1px solid var(--color-primary-border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 20px;
+      flex-shrink: 0;
+    }
+
+    .stat-content {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .stat-val {
+      font-size: 20px;
+      font-weight: 800;
+      font-family: var(--font-mono);
+      color: var(--color-ink);
+      line-height: 1.1;
+    }
+
+    .stat-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--color-mute);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin-top: 2px;
+    }
+
+    /* Plot Gallery Grid */
+    .plot-gallery-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 18px;
+      margin-bottom: 28px;
+    }
+
+    @media (max-width: 900px) {
+      .plot-gallery-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .plot-card {
+      background: #ffffff;
+      border: 1px solid var(--color-hairline);
+      border-radius: var(--radius-md);
+      overflow: hidden;
+      box-shadow: var(--shadow-whisper);
+      transition: all 0.2s ease;
+      cursor: pointer;
+    }
+
+    .plot-card:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-float);
+      border-color: var(--color-primary-border);
+    }
+
+    .plot-img-wrapper {
+      height: 180px;
+      background: #f8faf9;
+      overflow: hidden;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+    }
+
+    .plot-img-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      transition: transform 0.25s ease;
+    }
+
+    .plot-card:hover .plot-img-wrapper img {
+      transform: scale(1.04);
+    }
+
+    .plot-card-body {
+      padding: 14px 16px;
+    }
+
+    .plot-card-title {
+      font-size: 13px;
+      font-weight: 700;
+      color: var(--color-ink);
+      margin-bottom: 4px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .plot-card-desc {
+      font-size: 11px;
+      color: var(--color-mute);
+      line-height: 16px;
     }
 
     /* Data Table Styling */
@@ -1028,25 +1199,232 @@
     .badge-info { background: #e0f2fe; color: #0369a1; border: 1px solid #7dd3fc; }
     .badge-warning { background: #fef3c7; color: #b45309; border: 1px solid #fde68a; }
 
+    /* Search & Filter Bar */
+    .filter-toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 18px;
+    }
+
+    .search-input {
+      height: 38px;
+      padding: 0 14px 0 34px;
+      border-radius: var(--radius-pill);
+      border: 1px solid var(--color-hairline);
+      background: #ffffff;
+      font-family: inherit;
+      font-size: 13px;
+      outline: none;
+      width: 320px;
+      max-width: 100%;
+      transition: all 0.15s ease;
+    }
+
+    .search-input:focus {
+      border-color: var(--color-primary);
+      box-shadow: 0 0 0 3px var(--color-accent-glow);
+    }
+
+    .search-wrapper {
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .search-icon {
+      position: absolute;
+      left: 12px;
+      color: var(--color-mute);
+      pointer-events: none;
+    }
+
+    /* Lightbox Modal */
+    .modal-lightbox {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(8px);
+      z-index: 1000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+
+    .modal-lightbox.active {
+      display: flex;
+    }
+
+    .lightbox-content {
+      background: #ffffff;
+      border-radius: var(--radius-lg);
+      max-width: 1000px;
+      width: 100%;
+      max-height: 90vh;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+    }
+
+    .lightbox-header {
+      padding: 16px 20px;
+      border-bottom: 1px solid var(--color-hairline);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .lightbox-title {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--color-ink);
+    }
+
+    .lightbox-close {
+      background: none;
+      border: none;
+      font-size: 22px;
+      cursor: pointer;
+      color: var(--color-mute);
+      padding: 4px;
+      line-height: 1;
+    }
+
+    .lightbox-body {
+      padding: 20px;
+      overflow: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #fafdfa;
+    }
+
+    .lightbox-body img {
+      max-width: 100%;
+      max-height: 75vh;
+      object-fit: contain;
+      border-radius: var(--radius-sm);
+      border: 1px solid var(--color-hairline);
+    }
+
+    /* Toast Notification */
+    .toast-container {
+      position: fixed;
+      bottom: 24px;
+      right: 24px;
+      z-index: 2000;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      pointer-events: none;
+    }
+
+    .toast {
+      background: #ffffff;
+      color: var(--color-ink);
+      border: 1px solid var(--color-hairline);
+      border-left: 4px solid var(--color-primary);
+      border-radius: var(--radius-sm);
+      padding: 12px 18px;
+      box-shadow: var(--shadow-card);
+      font-size: 13px;
+      font-weight: 500;
+      pointer-events: auto;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transform: translateY(20px);
+      opacity: 0;
+      transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .toast.show {
+      transform: translateY(0);
+      opacity: 1;
+    }
+
+    .toast-success { border-left-color: var(--color-primary); }
+    .toast-error { border-left-color: var(--color-error); }
+    .toast-info { border-left-color: var(--color-info); }
+
+    /* Official Printable Agricultural Extension Slip */
+    #printableSlip {
+      display: none;
+    }
+
+    @media print {
+      body {
+        background: #ffffff !important;
+        color: #000000 !important;
+      }
+      .nav-bar, .hero-wrapper, .bg-mesh, .btn-actions-row, .preset-pill, 
+      footer, .nav-tabs, #tab-pane-eda, #tab-pane-benchmark, #tab-pane-history,
+      .main-grid, .toast-container, .modal-lightbox {
+        display: none !important;
+      }
+      #printableSlip {
+        display: block !important;
+        padding: 30px;
+        font-family: 'Times New Roman', Times, serif;
+        color: #111827;
+      }
+      .slip-header {
+        text-align: center;
+        border-bottom: 2px solid #15803d;
+        padding-bottom: 14px;
+        margin-bottom: 20px;
+      }
+      .slip-title {
+        font-size: 22px;
+        font-weight: bold;
+        text-transform: uppercase;
+        color: #15803d;
+        margin-top: 6px;
+      }
+      .slip-sub {
+        font-size: 13px;
+        font-style: italic;
+        color: #4b5563;
+      }
+      .slip-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 16px 0;
+      }
+      .slip-table th, .slip-table td {
+        border: 1px solid #9ca3af;
+        padding: 8px 10px;
+        font-size: 13px;
+      }
+      .slip-table th {
+        background: #f3f4f6;
+        text-align: left;
+      }
+      .slip-signatures {
+        display: flex;
+        justify-content: space-between;
+        margin-top: 40px;
+        padding: 0 40px;
+        text-align: center;
+      }
+      .slip-sign-box {
+        width: 200px;
+      }
+    }
+
     /* Footer */
     footer {
       border-top: 1px solid var(--color-hairline);
-      padding: 28px 24px;
+      padding: 24px;
       text-align: center;
       font-size: 13px;
       color: var(--color-mute);
       margin-top: auto;
       background: #ffffff;
-    }
-
-    footer a {
-      color: var(--color-primary);
-      text-decoration: none;
-      font-weight: 600;
-    }
-
-    footer a:hover {
-      text-decoration: underline;
     }
   </style>
 </head>
@@ -1062,7 +1440,6 @@
       <div class="nav-left">
         <a href="/" class="nav-brand">
           <div class="brand-icon">
-            <!-- Leaf SVG -->
             <svg viewBox="0 0 24 24">
               <path d="M7 20h10" />
               <path d="M10 20c0-6 4-9 8-9-1.5 4-5 6-8 9z" />
@@ -1105,20 +1482,20 @@
   </nav>
 
   <!-- Hero Header -->
-  <header class="hero-wrapper">
+  <header class="hero-wrapper" id="pageHero">
     <div class="hero-content">
       <div class="mono-eyebrow">
         <span>🌱</span>
-        <span>Thổ Nhưỡng & Vi Khí Hậu Học Máy • v3.0 Eco-Green</span>
+        <span id="heroEyebrow">Thổ Nhưỡng & Vi Khí Hậu Học Máy • v3.0 Eco-Green</span>
       </div>
-      <h1 class="hero-headline">Khuyến Nghị Cây Trồng Thông Minh</h1>
-      <p class="hero-subtitle">
+      <h1 class="hero-headline" id="heroHeadline">Khuyến Nghị Cây Trồng Thông Minh</h1>
+      <p class="hero-subtitle" id="heroSubtitle">
         Hệ thống học máy phân tích định lượng 7 chỉ số dinh dưỡng đất và vi khí hậu thời gian thực,
         đưa ra đề xuất loại cây trồng đạt năng suất cao nhất kèm phác đồ bón phân N-P-K chi tiết.
       </p>
 
-      <!-- Region Presets -->
-      <div class="presets-bar">
+      <!-- Region Presets (visible for tab 1) -->
+      <div class="presets-bar" id="presetsBar">
         <span class="preset-label">Mẫu Vùng Miền:</span>
         <button type="button" class="preset-pill active" id="btn-dbscl" onclick="selectPreset('dbscl')">
           🌾 ĐBSCL (Lúa nước)
@@ -1131,6 +1508,9 @@
         </button>
         <button type="button" class="preset-pill" id="btn-dalat" onclick="selectPreset('dalat')">
           🍎 Cao Nguyên (Táo/Nho)
+        </button>
+        <button type="button" class="preset-pill" id="btn-songhong" onclick="selectPreset('songhong')">
+          🌽 Đồng Bằng Sông Hồng (Ngô)
         </button>
       </div>
     </div>
@@ -1151,7 +1531,7 @@
             <h2 class="card-title">
               <span>Thông Số Thổ Nhưỡng & Khí Hậu</span>
             </h2>
-            <span class="card-tag">7 ĐẶC TRƯNG</span>
+            <span class="card-tag">7 ĐẶC TRƯNG ĐẦU VÀO</span>
           </div>
 
           <form id="predictionForm" onsubmit="event.preventDefault(); triggerPrediction();">
@@ -1194,7 +1574,7 @@
             </div>
 
             <!-- Nhóm 2: pH & Nhiệt độ -->
-            <div class="section-eyebrow">2. Độ Chua Đất & Nhiệt Độ</div>
+            <div class="section-eyebrow">2. Độ Chua Đất & Nhiệt Độ Môi Trường</div>
             <div class="form-row cols-2">
               <div class="field-group">
                 <label class="field-label" for="inp-ph">
@@ -1220,7 +1600,7 @@
             </div>
 
             <!-- Nhóm 3: Ẩm độ & Lượng mưa -->
-            <div class="section-eyebrow">3. Độ Ẩm Không Khí & Lượng Mưa</div>
+            <div class="section-eyebrow">3. Độ Ẩm Không Khí & Lượng Mưa Tự Nhiên</div>
             <div class="form-row cols-2">
               <div class="field-group">
                 <label class="field-label" for="inp-humidity">
@@ -1254,6 +1634,9 @@
                 </svg>
               </button>
               <button type="button" class="btn-reset" onclick="resetForm()">Đặt lại</button>
+              <button type="button" class="btn-print" onclick="prepareAndPrintReport()" title="In hoặc lưu phiếu tư vấn PDF">
+                <span>🖨️ In Phiếu</span>
+              </button>
             </div>
 
           </form>
@@ -1264,7 +1647,12 @@
           
           <!-- Top 1 Recommendation Hero Card -->
           <div class="top1-hero">
-            <div class="top1-badge-pill">★ Top 1 Khuyến Nghị Ưu Tiên</div>
+            <div class="top1-header-bar">
+              <div class="top1-badge-pill">★ Top 1 Khuyến Nghị Ưu Tiên</div>
+              <button type="button" class="btn-print" style="height: 32px; padding: 0 12px; font-size: 12px;" onclick="prepareAndPrintReport()">
+                Xuất Phiếu Khuyến Nông
+              </button>
+            </div>
 
             <div class="top1-main">
               <div class="top1-title-group">
@@ -1303,6 +1691,22 @@
               <div>
                 <strong>Lưu ý canh tác:</strong> <span id="top1Tips">Duy trì mực nước 3-5cm thời kỳ đẻ nhánh và làm đòng.</span>
               </div>
+            </div>
+          </div>
+
+          <!-- Radar Chart: Soil Parameters vs Crop Optimal Suitability -->
+          <div class="radar-card">
+            <div class="card-header" style="margin-bottom: 8px;">
+              <h3 class="card-title">
+                <span>🌱 Biểu Đồ Radar: Tương Thích 7 Yếu Tố Thổ Nhưỡng</span>
+              </h3>
+              <span class="card-tag">SOIL RADAR MATCH</span>
+            </div>
+            <p style="font-size: 12px; color: var(--color-mute); margin-bottom: 12px;">
+              So sánh tỷ lệ thực tế của đất canh tác với dải sinh trưởng tối ưu của cây trồng được đề xuất:
+            </p>
+            <div class="chart-container-wrapper">
+              <canvas id="soilRadarChart"></canvas>
             </div>
           </div>
 
@@ -1448,40 +1852,124 @@
          TAB 2: KHÁM PHÁ DỮ LIỆU NÔNG NGHIỆP (EDA & DATASET EXPLORER)
          ==================================================================== -->
     <div id="tab-pane-eda" class="tab-pane">
+      
+      <!-- Top Stat Metric Cards -->
+      <div class="stat-cards-grid">
+        <div class="stat-card">
+          <div class="stat-icon">🌾</div>
+          <div class="stat-content">
+            <span class="stat-val">2.200</span>
+            <span class="stat-label">Mẫu dữ liệu thực nghiệm</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🌱</div>
+          <div class="stat-content">
+            <span class="stat-val">22</span>
+            <span class="stat-label">Loài cây nông nghiệp</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🧪</div>
+          <div class="stat-content">
+            <span class="stat-val">7</span>
+            <span class="stat-label">Chỉ số thổ nhưỡng & khí hậu</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">⚖️</div>
+          <div class="stat-content">
+            <span class="stat-val">100%</span>
+            <span class="stat-label">Phân bố cân bằng tuyệt đối</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- EDA Visual Plots Gallery -->
       <div class="card" style="margin-bottom: 24px;">
         <div class="card-header">
           <h2 class="card-title">
-            <span>Khảo Sát Thống Kê & Phân Bố Dữ Liệu (EDA)</span>
+            <span>Biểu Đồ Trực Quan Hóa Khám Phá Dữ Liệu (EDA Plots)</span>
           </h2>
-          <span class="card-tag">2.200 MẪU • 22 CÂY TRỒNG</span>
+          <span class="card-tag">STATISTICAL EDA</span>
         </div>
-        
-        <p style="color: var(--color-body); margin-bottom: 20px; line-height: 22px;">
-          Bộ dữ liệu huấn luyện gồm <strong>2.200 mẫu khảo sát nông nghiệp thực tế</strong> được chuẩn hóa từ Viện Nghiên cứu Nông học, bao gồm 22 loại cây trồng (100 mẫu/lớp, phân bố cân bằng tuyệt đối). Dưới đây là bảng tra cứu điều kiện thổ nhưỡng tối ưu của từng loài cây:
+        <p style="color: var(--color-body); margin-bottom: 16px; font-size: 13px;">
+          Bấm vào hình ảnh bất kỳ để phóng to chi tiết với độ phân giải cao:
         </p>
 
-        <!-- Crop Filter Selection -->
-        <div style="display: flex; flex-wrap: wrap; gap: 12px; align-items: center; margin-bottom: 20px;">
-          <label style="font-weight: 600; color: var(--color-ink);" for="cropFilterSelect">Chọn loại cây để lọc:</label>
-          <select id="cropFilterSelect" onchange="loadDatasetPreview(this.value)" style="height: 38px; padding: 0 14px; border-radius: var(--radius-sm); border: 1px solid var(--color-hairline); background: #ffffff; font-family: inherit; font-size: 14px; outline: none;">
-            <option value="">-- Toàn bộ 22 loại cây --</option>
-          </select>
-          <button type="button" class="preset-pill" onclick="loadDatasetPreview('')">Xem ngẫu nhiên mẫu mới</button>
+        <div class="plot-gallery-grid">
+          <div class="plot-card" onclick="openLightbox('/static/plots/heatmap_correlation.png', 'Ma Trận Tương Quan Tuyến Tính Pearson (Correlation Heatmap)')">
+            <div class="plot-img-wrapper">
+              <img src="/static/plots/heatmap_correlation.png" alt="Heatmap Correlation">
+            </div>
+            <div class="plot-card-body">
+              <h4 class="plot-card-title">🔥 Ma Trận Tương Quan Pearson</h4>
+              <p class="plot-card-desc">Tương quan chặt chẽ giữa P và K (r = 0.74), phân lập độc lập giữa các yếu tố khí tượng.</p>
+            </div>
+          </div>
+
+          <div class="plot-card" onclick="openLightbox('/static/plots/feature_distribution.png', 'Phân Bố Tần Suất Dinh Dưỡng & Khí Tượng (Feature Distributions)')">
+            <div class="plot-img-wrapper">
+              <img src="/static/plots/feature_distribution.png" alt="Feature Distribution">
+            </div>
+            <div class="plot-card-body">
+              <h4 class="plot-card-title">📈 Phân Bố Tần Suất 7 Đặc Trưng</h4>
+              <p class="plot-card-desc">Kiểm định phân phối chuẩn của nhiệt độ, độ pH và sự phân hóa mạnh mẽ của lượng mưa.</p>
+            </div>
+          </div>
+
+          <div class="plot-card" onclick="openLightbox('/static/plots/knn_k_survey.png', 'Khảo Sát Tối Ưu Siêu Tham Số K của Thuật Toán KNN (KNN K-Survey)')">
+            <div class="plot-img-wrapper">
+              <img src="/static/plots/knn_k_survey.png" alt="KNN K Survey">
+            </div>
+            <div class="plot-card-body">
+              <h4 class="plot-card-title">🔍 Khảo Sát Siêu Tham Số KNN (k=1..20)</h4>
+              <p class="plot-card-desc">Xác định điểm cân bằng bias-variance tối ưu tại k=5 đạt độ chính xác 97.95%.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Dataset Table & Filter Explorer Card -->
+      <div class="card" style="margin-bottom: 24px;">
+        <div class="card-header">
+          <h2 class="card-title">
+            <span>Khảo Sát Chi Tiết Mẫu Dữ Liệu Thực Nghiệm</span>
+          </h2>
+          <span class="card-tag" id="edaSampleTag">TRÍCH XUẤT 25 MẪU</span>
+        </div>
+
+        <!-- Crop Filter Selection Toolbar -->
+        <div class="filter-toolbar">
+          <div style="display: flex; flex-wrap: wrap; gap: 10px; align-items: center;">
+            <label style="font-weight: 600; color: var(--color-ink);" for="cropFilterSelect">Lọc theo loài cây:</label>
+            <select id="cropFilterSelect" onchange="loadDatasetPreview(this.value)" style="height: 38px; padding: 0 14px; border-radius: var(--radius-sm); border: 1px solid var(--color-hairline); background: #ffffff; font-family: inherit; font-size: 13px; outline: none;">
+              <option value="">-- Toàn bộ 22 loài cây --</option>
+            </select>
+            <button type="button" class="preset-pill" onclick="loadDatasetPreview(document.getElementById('cropFilterSelect').value)">
+              🔄 Đổi ngẫu nhiên mẫu
+            </button>
+          </div>
+
+          <div class="search-wrapper">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="edaSearchInput" class="search-input" placeholder="Tìm kiếm nhanh trong bảng..." oninput="filterEdaTable()">
+          </div>
         </div>
 
         <!-- Optimal Specs Display Card -->
         <div id="cropOptimalBox" style="display: none; background: #f0fdf4; border: 1px solid #86efac; border-radius: var(--radius-md); padding: 18px; margin-bottom: 20px;">
-          <h4 id="optimalBoxTitle" style="color: #15803d; font-size: 16px; margin-bottom: 8px;">Nhu cầu chuẩn của cây</h4>
-          <div id="optimalBoxContent" style="display: flex; flex-wrap: wrap; gap: 16px; font-size: 13px; color: #166534;"></div>
+          <h4 id="optimalBoxTitle" style="color: #15803d; font-size: 15px; margin-bottom: 8px;">Nhu cầu chuẩn của cây:</h4>
+          <div id="optimalBoxContent" style="display: flex; flex-wrap: wrap; gap: 14px; font-size: 13px; color: #166534;"></div>
         </div>
 
         <!-- Sample Records Table -->
-        <h3 style="font-size: 15px; font-weight: 700; color: var(--color-ink); margin-bottom: 12px;">Mẫu Dữ Liệu Thực Nghiệm (Trích Xuất 20 Bản Ghi)</h3>
         <div class="table-container">
           <table class="data-table" id="datasetTable">
             <thead>
               <tr>
                 <th>Cây Trồng (Label)</th>
+                <th>Phân Loại</th>
                 <th>Đạm (N)</th>
                 <th>Lân (P)</th>
                 <th>Kali (K)</th>
@@ -1492,7 +1980,7 @@
               </tr>
             </thead>
             <tbody id="datasetTableBody">
-              <tr><td colspan="8" style="text-align: center; padding: 20px;">Đang tải dữ liệu thực nghiệm...</td></tr>
+              <tr><td colspan="9" style="text-align: center; padding: 24px;">Đang tải dữ liệu thực nghiệm...</td></tr>
             </tbody>
           </table>
         </div>
@@ -1503,16 +1991,66 @@
          TAB 3: SO SÁNH MÔ HÌNH HỌC MÁY (MODEL BENCHMARK & METRICS)
          ==================================================================== -->
     <div id="tab-pane-benchmark" class="tab-pane">
+
+      <!-- Stat Metrics Top Cards -->
+      <div class="stat-cards-grid">
+        <div class="stat-card">
+          <div class="stat-icon">🌲</div>
+          <div class="stat-content">
+            <span class="stat-val" style="color: var(--color-primary);">99.55%</span>
+            <span class="stat-label">Test Acc (Random Forest)</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🎯</div>
+          <div class="stat-content">
+            <span class="stat-val" style="color: var(--color-primary);">99.55%</span>
+            <span class="stat-label">Macro F1-Score Tối Ưu</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">⚖️</div>
+          <div class="stat-content">
+            <span class="stat-val" style="color: #0284c7;">0.40%</span>
+            <span class="stat-label">Khoảng cách Train-Test Gap</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🛡️</div>
+          <div class="stat-content">
+            <span class="stat-val">5-Fold</span>
+            <span class="stat-label">Cross Validation</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Interactive Benchmark Comparison Chart (Chart.js Grouped Bar) -->
       <div class="card" style="margin-bottom: 24px;">
         <div class="card-header">
           <h2 class="card-title">
-            <span>Đánh Giá & So Sánh Hiệu Năng Các Thuật Toán Học Máy</span>
+            <span>Biểu Đồ So Sánh Hiệu Năng 5 Thuật Toán Học Máy (Benchmark Chart)</span>
           </h2>
-          <span class="card-tag">5-FOLD CROSS VALIDATION</span>
+          <span class="card-tag">MULTI-METRIC COMPARISON</span>
+        </div>
+        <p style="color: var(--color-body); font-size: 13px; margin-bottom: 16px;">
+          So sánh trực tiếp giữa Độ chính xác Tập học (Train Accuracy), Tập kiểm thử (Test Accuracy) và Chỉ số Macro F1-Score:
+        </p>
+        <div style="position: relative; height: 320px; width: 100%;">
+          <canvas id="benchmarkBarChart"></canvas>
+        </div>
+      </div>
+
+      <!-- Benchmark Table & Visual Plots Card -->
+      <div class="card" style="margin-bottom: 24px;">
+        <div class="card-header">
+          <h2 class="card-title">
+            <span>Bảng Đánh Giá Chi Tiết Theo Tiêu Chí Học Máy</span>
+          </h2>
+          <span class="card-tag">5-FOLD STRATIFIED SPLIT (80/20)</span>
         </div>
 
         <p style="color: var(--color-body); margin-bottom: 20px; line-height: 22px;">
-          Theo đúng tiêu chí đánh giá môn học Machine Learning, dự án tiến hành thử nghiệm so sánh 5 thuật toán học máy phổ biến trên cùng tập dữ liệu chuẩn hóa (80% Train / 20% Test, phân tầng Stratified theo 22 nhãn). Đánh giá dựa trên Accuracy, Macro F1-Score và khoảng cách Train - Test Gap để kiểm định rủi ro Quá khớp (Overfitting):
+          Theo tiêu chí đánh giá môn học Machine Learning, dự án tiến hành thử nghiệm so sánh 5 thuật toán học máy phổ biến trên cùng tập dữ liệu chuẩn hóa (80% Train / 20% Test, phân tầng Stratified theo 22 nhãn). Đánh giá dựa trên Accuracy, Macro F1-Score và khoảng cách Train - Test Gap để kiểm định rủi ro Quá khớp (Overfitting):
         </p>
 
         <!-- Benchmark Comparison Table -->
@@ -1579,6 +2117,32 @@
           </table>
         </div>
 
+        <!-- Academic Plots Grid -->
+        <h3 style="font-size: 15px; font-weight: 700; color: var(--color-ink); margin-bottom: 14px;">
+          Biểu Đồ Kiểm Định Kiểm Nghiệm (Click Phóng To)
+        </h3>
+        <div class="plot-gallery-grid" style="grid-template-columns: repeat(2, 1fr); margin-bottom: 24px;">
+          <div class="plot-card" onclick="openLightbox('/static/plots/confusion_matrix.png', 'Ma Trận Nhầm Lẫn 22x22 Lớp Cây Trồng (Random Forest - 99.55%)')">
+            <div class="plot-img-wrapper" style="height: 220px;">
+              <img src="/static/plots/confusion_matrix.png" alt="Confusion Matrix">
+            </div>
+            <div class="plot-card-body">
+              <h4 class="plot-card-title">🎯 Ma Trận Nhầm Lẫn (Confusion Matrix)</h4>
+              <p class="plot-card-desc">Đường chéo chính phân loại chính xác gần như hoàn hảo trên cả 22 lớp cây trồng.</p>
+            </div>
+          </div>
+
+          <div class="plot-card" onclick="openLightbox('/static/plots/accuracy_comparison.png', 'So Sánh Trực Quan Độ Chính Xác 5 Thuật Toán Học Máy')">
+            <div class="plot-img-wrapper" style="height: 220px;">
+              <img src="/static/plots/accuracy_comparison.png" alt="Accuracy Comparison">
+            </div>
+            <div class="plot-card-body">
+              <h4 class="plot-card-title">📊 So Sánh Accuracy Giữa Các Thuật Toán</h4>
+              <p class="plot-card-desc">Trực quan hóa độ chênh lệch hiệu năng giữa Ensemble Model và Single Tree Baseline.</p>
+            </div>
+          </div>
+        </div>
+
         <!-- Academic Explanations -->
         <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
           <div style="background: #fafdfa; border: 1px solid var(--color-hairline); border-radius: var(--radius-sm); padding: 16px;">
@@ -1603,23 +2167,72 @@
          TAB 4: LỊCH SỬ DỰ ĐOÁN (FIELD MEASUREMENT HISTORY)
          ==================================================================== -->
     <div id="tab-pane-history" class="tab-pane">
+
+      <!-- History Summary Metrics -->
+      <div class="stat-cards-grid">
+        <div class="stat-card">
+          <div class="stat-icon">📝</div>
+          <div class="stat-content">
+            <span class="stat-val" id="histCount">0</span>
+            <span class="stat-label">Tổng số lượt đo</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🌾</div>
+          <div class="stat-content">
+            <span class="stat-val" id="histTopCrop">—</span>
+            <span class="stat-label">Cây đề xuất nhiều nhất</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">⭐</div>
+          <div class="stat-content">
+            <span class="stat-val" id="histAvgConf">0%</span>
+            <span class="stat-label">Độ tin cậy AI trung bình</span>
+          </div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-icon">🧪</div>
+          <div class="stat-content">
+            <span class="stat-val" id="histAvgPh">0.0</span>
+            <span class="stat-label">Độ pH trung bình đất</span>
+          </div>
+        </div>
+      </div>
+
       <div class="card">
         <div class="card-header">
           <h2 class="card-title">
             <span>Nhật Ký Đo Đạc & Lịch Sử Khuyến Nghị</span>
           </h2>
-          <div style="display: flex; gap: 8px;">
-            <button type="button" class="preset-pill" onclick="loadHistory()">Làm mới</button>
-            <button type="button" class="btn-logout" onclick="clearAllHistory()">Xóa toàn bộ</button>
+          <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+            <button type="button" class="btn-print" onclick="exportHistoryToCSV()" title="Tải toàn bộ nhật ký dạng file CSV">
+              📥 Xuất CSV
+            </button>
+            <button type="button" class="preset-pill" onclick="loadHistory()">
+              🔄 Làm mới
+            </button>
+            <button type="button" class="btn-logout" onclick="clearAllHistory()">
+              Xóa toàn bộ
+            </button>
           </div>
         </div>
 
-        <p style="color: var(--color-body); margin-bottom: 20px; line-height: 22px;">
+        <p style="color: var(--color-body); margin-bottom: 18px; line-height: 22px; font-size: 13px;">
           Lưu trữ các lần phân tích thổ nhưỡng của tài khoản giúp theo dõi biến động dinh dưỡng đất qua từng mùa vụ:
         </p>
 
+        <!-- Filter Search for History -->
+        <div class="filter-toolbar" style="margin-bottom: 16px;">
+          <div class="search-wrapper">
+            <span class="search-icon">🔍</span>
+            <input type="text" id="histSearchInput" class="search-input" placeholder="Lọc theo tên cây, ngày đo, hoặc thông số..." oninput="filterHistoryTable()">
+          </div>
+          <span style="font-size: 12px; color: var(--color-mute);" id="historyCounterLabel">Đang hiển thị: 0 bản ghi</span>
+        </div>
+
         <div class="table-container">
-          <table class="data-table">
+          <table class="data-table" id="historyTable">
             <thead>
               <tr>
                 <th>Thời Gian</th>
@@ -1645,11 +2258,104 @@
 
   </main>
 
+  <!-- Lightbox Modal for Fullscreen Plot Inspection -->
+  <div class="modal-lightbox" id="lightboxModal" onclick="closeLightbox(event)">
+    <div class="lightbox-content" onclick="event.stopPropagation()">
+      <div class="lightbox-header">
+        <h3 class="lightbox-title" id="lightboxTitle">Chi Tiết Biểu Đồ</h3>
+        <button type="button" class="lightbox-close" onclick="closeLightbox()">&times;</button>
+      </div>
+      <div class="lightbox-body">
+        <img id="lightboxImg" src="" alt="Plot Detail">
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Printable Extension Slip (Only visible when printing) -->
+  <section id="printableSlip">
+    <div class="slip-header">
+      <div style="font-size: 14px; text-transform: uppercase; font-weight: bold; letter-spacing: 1px;">
+        CỘNG HÒA XÃ HỘI CHỦ NGHĨA VIỆT NAM<br>
+        <span style="font-size: 12px; font-weight: normal; border-bottom: 1px solid #111827; padding-bottom: 2px;">Độc lập — Tự do — Hạnh phúc</span>
+      </div>
+      <div class="slip-title">PHIẾU TƯ VẤN KHUYẾN NÔNG & THỔ NHƯỠNG HỌC MÁY</div>
+      <div class="slip-sub">Hệ thống AI Khuyến nghị Cây trồng Thông minh • AgriBot AI v3.0 Eco-Green</div>
+      <div style="margin-top: 8px; font-size: 12px; color: #4b5563;">
+        Thời gian lập: <span id="slipTime"></span> | Tài khoản: {{ current_user.email if current_user.is_authenticated else 'demo@agribot.vn' }}
+      </div>
+    </div>
+
+    <h4 style="font-size: 14px; font-weight: bold; margin-bottom: 6px;">1. THÔNG SỐ ĐO ĐẠC THỔ NHƯỠNG & KHÍ HẬU THỰC ĐỊA</h4>
+    <table class="slip-table">
+      <thead>
+        <tr>
+          <th>Đạm (N)</th>
+          <th>Lân (P)</th>
+          <th>Kali (K)</th>
+          <th>Độ pH Đất</th>
+          <th>Nhiệt Độ</th>
+          <th>Độ Ẩm Không Khí</th>
+          <th>Lượng Mưa</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td id="slipN"></td>
+          <td id="slipP"></td>
+          <td id="slipK"></td>
+          <td id="slipPh"></td>
+          <td id="slipTemp"></td>
+          <td id="slipHumidity"></td>
+          <td id="slipRainfall"></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h4 style="font-size: 14px; font-weight: bold; margin-top: 16px; margin-bottom: 6px;">2. KẾT QUẢ KHUYẾN NGHỊ CÂY TRỒNG TỐI ƯU</h4>
+    <table class="slip-table">
+      <tbody>
+        <tr>
+          <td style="width: 25%; font-weight: bold;">Cây trồng ưu tiên (Top 1):</td>
+          <td id="slipCropName" style="font-weight: bold; color: #15803d; font-size: 15px;"></td>
+          <td style="width: 20%; font-weight: bold;">Độ tin cậy mô hình AI:</td>
+          <td id="slipCropProb" style="font-weight: bold;"></td>
+        </tr>
+        <tr>
+          <td style="font-weight: bold;">Chu kỳ sinh trưởng:</td>
+          <td id="slipCropCycle"></td>
+          <td style="font-weight: bold;">Loại đất phù hợp:</td>
+          <td id="slipCropSoil"></td>
+        </tr>
+        <tr>
+          <td style="font-weight: bold;">Lưu ý kỹ thuật canh tác:</td>
+          <td colspan="3" id="slipCropTips"></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h4 style="font-size: 14px; font-weight: bold; margin-top: 16px; margin-bottom: 6px;">3. CHẨN ĐOÁN & PHÁC ĐỒ BÓN PHÂN CÂN BẰNG N-P-K</h4>
+    <div id="slipFertList" style="margin-bottom: 12px; font-size: 13px; line-height: 20px;"></div>
+
+    <div class="slip-signatures">
+      <div class="slip-sign-box">
+        <strong>CHỦ HỘ CANH TÁC</strong><br>
+        <span style="font-size: 11px; font-style: italic;">(Ký và ghi rõ họ tên)</span>
+      </div>
+      <div class="slip-sign-box">
+        <strong>CÁN BỘ KỸ THUẬT NÔNG NGHIỆP</strong><br>
+        <span style="font-size: 11px; font-style: italic;">(Xác nhận khuyến nghị AI)</span>
+      </div>
+    </div>
+  </section>
+
   <!-- Footer -->
   <footer>
-    <div style="max-width: 1240px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px;">
+    <div style="max-width: 1280px; margin: 0 auto; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px;">
       <div>
-        <strong>AgriBot AI Eco-Green</strong> — Hệ thống Khuyến nghị Cây trồng Thông minh
+        <strong>AgriBot AI Eco-Green</strong> — Hệ thống Khuyến nghị Cây trồng Thông minh & Nông nghiệp Bền vững
       </div>
       <div>
         Đồ án Môn học Học máy (Machine Learning) • Khoa Công nghệ Thông tin
@@ -1664,8 +2370,16 @@
       dbscl: { N: 90, P: 42, K: 43, temp: 21.0, humidity: 82.0, ph: 6.5, rainfall: 203.0 },
       taynguyen: { N: 105, P: 28, K: 32, temp: 25.5, humidity: 60.0, ph: 6.8, rainfall: 160.0 },
       mientrung: { N: 20, P: 15, K: 45, temp: 32.0, humidity: 45.0, ph: 6.2, rainfall: 40.0 },
-      dalat: { N: 30, P: 130, K: 200, temp: 15.0, humidity: 85.0, ph: 6.0, rainfall: 110.0 }
+      dalat: { N: 30, P: 130, K: 200, temp: 15.0, humidity: 85.0, ph: 6.0, rainfall: 110.0 },
+      songhong: { N: 78, P: 48, K: 20, temp: 22.5, humidity: 65.0, ph: 6.2, rainfall: 85.0 }
     };
+
+    // Global App State
+    let currentPredictionData = null;
+    let soilRadarChartInstance = null;
+    let benchmarkBarChartInstance = null;
+    let cachedHistoryData = [];
+    let cachedSampleData = [];
 
     // Tab Switching
     function switchTab(tabId) {
@@ -1678,9 +2392,33 @@
       if (activeBtn) activeBtn.classList.add('active');
       if (activePane) activePane.classList.add('active');
 
-      if (tabId === 'eda') {
+      const presetsBar = document.getElementById('presetsBar');
+      const heroEyebrow = document.getElementById('heroEyebrow');
+      const heroHeadline = document.getElementById('heroHeadline');
+      const heroSubtitle = document.getElementById('heroSubtitle');
+
+      if (tabId === 'predict') {
+        if (presetsBar) presetsBar.style.display = 'flex';
+        if (heroEyebrow) heroEyebrow.textContent = 'Thổ Nhưỡng & Vi Khí Hậu Học Máy • v3.0 Eco-Green';
+        if (heroHeadline) heroHeadline.textContent = 'Khuyến Nghị Cây Trồng Thông Minh';
+        if (heroSubtitle) heroSubtitle.textContent = 'Hệ thống học máy phân tích định lượng 7 chỉ số dinh dưỡng đất và vi khí hậu thời gian thực, đưa ra đề xuất loại cây trồng đạt năng suất cao nhất kèm phác đồ bón phân N-P-K chi tiết.';
+      } else if (tabId === 'eda') {
+        if (presetsBar) presetsBar.style.display = 'none';
+        if (heroEyebrow) heroEyebrow.textContent = 'Khám Phá Dữ Liệu Nông Nghiệp • Exploratory Data Analysis';
+        if (heroHeadline) heroHeadline.textContent = 'Thống Kê & Phân Bố 2.200 Mẫu Dữ Liệu';
+        if (heroSubtitle) heroSubtitle.textContent = 'Khám phá sự phân bổ cân bằng tuyệt đối giữa 22 loại cây trồng, biểu đồ tương quan ma trận nhiệt Pearson và khảo sát phân phối 7 chỉ số dinh dưỡng đất.';
         loadDatasetPreview();
+      } else if (tabId === 'benchmark') {
+        if (presetsBar) presetsBar.style.display = 'none';
+        if (heroEyebrow) heroEyebrow.textContent = 'Đánh Giá Thuật Toán Học Máy • Machine Learning Benchmark';
+        if (heroHeadline) heroHeadline.textContent = 'So Sánh Hiệu Năng 5 Mô Hình Học Máy';
+        if (heroSubtitle) heroSubtitle.textContent = 'Kiểm định đối sánh giữa Random Forest, Gaussian Naive Bayes, SVM, KNN và Decision Tree dựa trên tiêu chuẩn 5-Fold Cross Validation và Overfitting Gap.';
+        initBenchmarkBarChart();
       } else if (tabId === 'history') {
+        if (presetsBar) presetsBar.style.display = 'none';
+        if (heroEyebrow) heroEyebrow.textContent = 'Nhật Ký Thổ Nhưỡng • Field Telemetry History';
+        if (heroHeadline) heroHeadline.textContent = 'Lịch Sử Đo Đạc & Khuyến Nghị Cây Trồng';
+        if (heroSubtitle) heroSubtitle.textContent = 'Theo dõi chu kỳ biến động dinh dưỡng đất qua các vụ mùa và quản lý các phác đồ bón phân đã đề xuất.';
         loadHistory();
       }
     }
@@ -1706,11 +2444,14 @@
 
       const fields = ['N', 'P', 'K', 'temp', 'humidity', 'ph', 'rainfall'];
       fields.forEach(f => {
-        document.getElementById(`inp-${f}`).value = data[f];
-        document.getElementById(`rng-${f}`).value = data[f];
+        const inp = document.getElementById(`inp-${f}`);
+        const rng = document.getElementById(`rng-${f}`);
+        if (inp) inp.value = data[f];
+        if (rng) rng.value = data[f];
       });
 
       triggerPrediction();
+      showToast(`Đã áp dụng mẫu vùng miền: ${activeBtn ? activeBtn.textContent.trim() : key}`, 'info');
     }
 
     function resetForm() {
@@ -1720,8 +2461,10 @@
     // Prediction Trigger
     async function triggerPrediction() {
       const btn = document.getElementById('btnPredict');
-      btn.disabled = true;
-      btn.innerHTML = `<span>Đang phân tích AI...</span>`;
+      if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = `<span>Đang phân tích AI...</span>`;
+      }
 
       const payload = {
         N: parseFloat(document.getElementById('inp-N').value),
@@ -1742,26 +2485,30 @@
 
         const res = await response.json();
         if (res.status === 'success') {
+          currentPredictionData = res.data;
           updateUI(res.data);
         } else {
-          alert('Lỗi: ' + res.message);
+          showToast('Lỗi dự đoán: ' + res.message, 'error');
         }
       } catch (err) {
         console.error('Fetch error:', err);
+        showToast('Không thể kết nối máy chủ dự đoán.', 'error');
       } finally {
-        btn.disabled = false;
-        btn.innerHTML = `
-          <span>Dự đoán Cây Trồng</span>
-          <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
-            <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-          </svg>
-        `;
+        if (btn) {
+          btn.disabled = false;
+          btn.innerHTML = `
+            <span>Dự đoán Cây Trồng</span>
+            <svg width="18" height="18" viewBox="0 0 16 16" fill="none">
+              <path d="M6 12L10 8L6 4" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          `;
+        }
       }
     }
 
     // Update Results UI
     function updateUI(data) {
-      const crops = data.top_crops;
+      const crops = data.top_crops || [];
       const top1 = crops[0] || {};
       const top2 = crops[1] || { name_vi: 'Không có', probability: 0, category: '—' };
       const top3 = crops[2] || { name_vi: 'Không có', probability: 0, category: '—' };
@@ -1827,6 +2574,9 @@
           customAdvice.style.display = 'none';
         }
       }
+
+      // Render or Update Soil Radar Chart
+      renderSoilRadarChart(data);
     }
 
     function renderDiffTag(elementId, diffVal) {
@@ -1844,6 +2594,209 @@
       }
     }
 
+    // Chart.js Radar Chart: Current Soil vs Optimal Crop Suitability
+    function renderSoilRadarChart(data) {
+      const canvas = document.getElementById('soilRadarChart');
+      if (!canvas || typeof Chart === 'undefined') return;
+
+      const inp = data.input_data;
+      const top1 = (data.top_crops && data.top_crops[0]) ? data.top_crops[0] : {};
+      const opt = data.optimal_requirements || {};
+
+      // Standard maximum normal values for normalization (0 - 100%)
+      const maxScales = {
+        N: 140, P: 145, K: 205, ph: 10, temp: 45, humidity: 100, rainfall: 300
+      };
+
+      const normalize = (val, max) => Math.min(100, Math.max(0, Math.round((val / max) * 100)));
+
+      const currentNorm = [
+        normalize(inp.N, maxScales.N),
+        normalize(inp.P, maxScales.P),
+        normalize(inp.K, maxScales.K),
+        normalize(inp.ph, maxScales.ph),
+        normalize(inp.temperature, maxScales.temp),
+        normalize(inp.humidity, maxScales.humidity),
+        normalize(inp.rainfall, maxScales.rainfall)
+      ];
+
+      const optimalNorm = [
+        normalize(opt.N || 60, maxScales.N),
+        normalize(opt.P || 50, maxScales.P),
+        normalize(opt.K || 40, maxScales.K),
+        normalize(opt.ph || 6.5, maxScales.ph),
+        normalize(opt.temp || 25, maxScales.temp),
+        normalize(opt.humidity || 70, maxScales.humidity),
+        normalize(opt.rainfall || 120, maxScales.rainfall)
+      ];
+
+      const chartData = {
+        labels: [
+          `Đạm (N: ${inp.N})`,
+          `Lân (P: ${inp.P})`,
+          `Kali (K: ${inp.K})`,
+          `Độ pH (${inp.ph})`,
+          `Nhiệt độ (${inp.temperature}°C)`,
+          `Độ ẩm (${inp.humidity}%)`,
+          `Lượng mưa (${inp.rainfall}mm)`
+        ],
+        datasets: [
+          {
+            label: `Đất Hiện Tại (${inp.N}-${inp.P}-${inp.K})`,
+            data: currentNorm,
+            backgroundColor: 'rgba(22, 163, 74, 0.28)',
+            borderColor: '#16a34a',
+            borderWidth: 2.2,
+            pointBackgroundColor: '#15803d',
+            pointBorderColor: '#ffffff',
+            pointRadius: 4,
+            pointHoverRadius: 6
+          },
+          {
+            label: `Nhu Cầu Chuẩn (${top1.name_vi || 'Cây trồng'})`,
+            data: optimalNorm,
+            backgroundColor: 'rgba(2, 132, 199, 0.12)',
+            borderColor: '#0284c7',
+            borderWidth: 2,
+            borderDash: [4, 4],
+            pointBackgroundColor: '#0284c7',
+            pointBorderColor: '#ffffff',
+            pointRadius: 4,
+            pointHoverRadius: 6
+          }
+        ]
+      };
+
+      if (soilRadarChartInstance) {
+        soilRadarChartInstance.data = chartData;
+        soilRadarChartInstance.update();
+      } else {
+        soilRadarChartInstance = new Chart(canvas, {
+          type: 'radar',
+          data: chartData,
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              r: {
+                beginAtZero: true,
+                max: 100,
+                ticks: { display: false, stepSize: 25 },
+                grid: { color: 'rgba(22, 101, 52, 0.12)' },
+                angleLines: { color: 'rgba(22, 101, 52, 0.14)' },
+                pointLabels: {
+                  font: { family: "'Geist', sans-serif", size: 11, weight: '600' },
+                  color: '#334155'
+                }
+              }
+            },
+            plugins: {
+              legend: {
+                position: 'bottom',
+                labels: {
+                  font: { family: "'Geist', sans-serif", size: 12, weight: '600' },
+                  usePointStyle: true,
+                  boxWidth: 8
+                }
+              },
+              tooltip: {
+                callbacks: {
+                  label: function(ctx) {
+                    return ` ${ctx.dataset.label}: ${ctx.raw}% độ chuẩn`;
+                  }
+                }
+              }
+            }
+          }
+        });
+      }
+    }
+
+    // Chart.js Benchmark Multi-Bar Chart
+    function initBenchmarkBarChart() {
+      const canvas = document.getElementById('benchmarkBarChart');
+      if (!canvas || typeof Chart === 'undefined') return;
+
+      if (benchmarkBarChartInstance) {
+        return; // Already initialized
+      }
+
+      const models = ['Random Forest', 'Naive Bayes', 'SVM (RBF)', 'KNN (k=5)', 'Decision Tree'];
+      const trainAcc = [99.94, 99.49, 98.58, 98.47, 89.49];
+      const testAcc = [99.55, 99.55, 98.41, 97.95, 87.05];
+      const f1Score = [99.55, 99.54, 98.40, 97.93, 85.21];
+
+      benchmarkBarChartInstance = new Chart(canvas, {
+        type: 'bar',
+        data: {
+          labels: models,
+          datasets: [
+            {
+              label: 'Độ chính xác Tập học (Train Acc %)',
+              data: trainAcc,
+              backgroundColor: '#86efac',
+              borderColor: '#22c55e',
+              borderWidth: 1,
+              borderRadius: 6
+            },
+            {
+              label: 'Độ chính xác Tập thi (Test Acc %)',
+              data: testAcc,
+              backgroundColor: '#15803d',
+              borderColor: '#14532d',
+              borderWidth: 1,
+              borderRadius: 6
+            },
+            {
+              label: 'Chỉ số Macro F1-Score (%)',
+              data: f1Score,
+              backgroundColor: '#0284c7',
+              borderColor: '#0369a1',
+              borderWidth: 1,
+              borderRadius: 6
+            }
+          ]
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          scales: {
+            y: {
+              beginAtZero: false,
+              min: 80,
+              max: 100,
+              ticks: {
+                callback: function(val) { return val + '%'; },
+                font: { family: "'Geist Mono', monospace", size: 11 }
+              },
+              grid: { color: 'rgba(0,0,0,0.05)' }
+            },
+            x: {
+              grid: { display: false },
+              ticks: { font: { family: "'Geist', sans-serif", size: 12, weight: '600' } }
+            }
+          },
+          plugins: {
+            legend: {
+              position: 'top',
+              labels: {
+                font: { family: "'Geist', sans-serif", size: 12, weight: '600' },
+                usePointStyle: true,
+                boxWidth: 8
+              }
+            },
+            tooltip: {
+              callbacks: {
+                label: function(ctx) {
+                  return ` ${ctx.dataset.label}: ${ctx.raw.toFixed(2)}%`;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+
     // Dataset Preview (EDA)
     let globalCropsLoaded = false;
     async function loadDatasetPreview(cropFilter = '') {
@@ -1853,6 +2806,8 @@
         const data = await res.json();
         
         if (data.status === 'success') {
+          cachedSampleData = data.samples || [];
+
           // Populate select if not already
           if (!globalCropsLoaded && data.crops) {
             const select = document.getElementById('cropFilterSelect');
@@ -1872,7 +2827,7 @@
             if (selectedCrop && selectedCrop.optimal) {
               const req = selectedCrop.optimal;
               optBox.style.display = 'block';
-              document.getElementById('optimalBoxTitle').textContent = `Điều kiện chuẩn của ${selectedCrop.emoji} ${selectedCrop.name_vi}:`;
+              document.getElementById('optimalBoxTitle').textContent = `Điều kiện thổ nhưỡng lý tưởng của ${selectedCrop.emoji} ${selectedCrop.name_vi}:`;
               document.getElementById('optimalBoxContent').innerHTML = `
                 <span>Đạm (N): <strong>${req.N} kg/ha</strong></span>
                 <span>Lân (P): <strong>${req.P} kg/ha</strong></span>
@@ -1880,36 +2835,62 @@
                 <span>Nhiệt độ: <strong>${req.temp}°C</strong></span>
                 <span>Độ ẩm: <strong>${req.humidity}%</strong></span>
                 <span>Độ pH: <strong>${req.ph}</strong></span>
-                <span>Lượng mưa: <strong>${req.rainfall} mm</strong></span>
+                <span>Lượng mưa: <strong>${req.rainfall} mm/năm</strong></span>
               `;
             }
           } else {
             optBox.style.display = 'none';
           }
 
-          // Table
-          const tbody = document.getElementById('datasetTableBody');
-          tbody.innerHTML = '';
-          if (data.samples && data.samples.length > 0) {
-            data.samples.forEach(row => {
-              const tr = document.createElement('tr');
-              tr.innerHTML = `
-                <td><strong>${row.label}</strong></td>
-                <td>${row.N}</td>
-                <td>${row.P}</td>
-                <td>${row.K}</td>
-                <td>${parseFloat(row.temperature).toFixed(1)}°C</td>
-                <td>${parseFloat(row.humidity).toFixed(1)}%</td>
-                <td>${parseFloat(row.ph).toFixed(2)}</td>
-                <td>${parseFloat(row.rainfall).toFixed(1)} mm</td>
-              `;
-              tbody.appendChild(tr);
-            });
-          }
+          // Render sample table
+          renderEdaTable(cachedSampleData);
         }
       } catch (err) {
         console.error('Error loading dataset preview:', err);
+        showToast('Lỗi nạp dữ liệu thực nghiệm.', 'error');
       }
+    }
+
+    function renderEdaTable(samples) {
+      const tbody = document.getElementById('datasetTableBody');
+      tbody.innerHTML = '';
+      if (samples && samples.length > 0) {
+        samples.forEach(row => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td>
+              <strong style="color: var(--color-primary);">${row.emoji || '🌱'} ${row.name_vi || row.label}</strong>
+              <div style="font-size: 11px; color: var(--color-mute); font-family: var(--font-mono);">${row.label}</div>
+            </td>
+            <td><span class="badge-pill badge-info">${row.category || 'Cây trồng'}</span></td>
+            <td><strong>${row.N}</strong></td>
+            <td><strong>${row.P}</strong></td>
+            <td><strong>${row.K}</strong></td>
+            <td>${parseFloat(row.temperature).toFixed(1)}°C</td>
+            <td>${parseFloat(row.humidity).toFixed(1)}%</td>
+            <td>${parseFloat(row.ph).toFixed(2)}</td>
+            <td>${parseFloat(row.rainfall).toFixed(1)} mm</td>
+          `;
+          tbody.appendChild(tr);
+        });
+        document.getElementById('edaSampleTag').textContent = `TRÍCH XUẤT ${samples.length} MẪU`;
+      } else {
+        tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 24px; color: var(--color-mute);">Không tìm thấy bản ghi nào khớp.</td></tr>`;
+      }
+    }
+
+    function filterEdaTable() {
+      const query = (document.getElementById('edaSearchInput').value || '').toLowerCase().trim();
+      if (!query) {
+        renderEdaTable(cachedSampleData);
+        return;
+      }
+      const filtered = cachedSampleData.filter(row => {
+        return (row.name_vi && row.name_vi.toLowerCase().includes(query)) ||
+               (row.label && row.label.toLowerCase().includes(query)) ||
+               (row.category && row.category.toLowerCase().includes(query));
+      });
+      renderEdaTable(filtered);
     }
 
     // History Functions
@@ -1920,35 +2901,98 @@
         const tbody = document.getElementById('historyTableBody');
         tbody.innerHTML = '';
 
-        if (data.status === 'success' && data.data.length > 0) {
-          data.data.forEach(h => {
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-              <td style="font-size: 12px; color: var(--color-mute);">${h.created_time}</td>
-              <td><strong style="color: var(--color-primary);">${h.emoji} ${h.crop_name}</strong></td>
-              <td><span class="badge-pill badge-success">${h.confidence.toFixed(1)}%</span></td>
-              <td>${h.n}</td>
-              <td>${h.p}</td>
-              <td>${h.k}</td>
-              <td>${h.temp}°C</td>
-              <td>${h.humidity}%</td>
-              <td>${h.ph}</td>
-              <td>${h.rainfall} mm</td>
-              <td>
-                <div style="display: flex; gap: 6px;">
-                  <button type="button" class="preset-pill" style="padding: 3px 8px; font-size: 11px;" onclick='loadHistoryItem(${JSON.stringify(h)})'>Nạp lại</button>
-                  <button type="button" class="btn-logout" style="padding: 3px 8px; font-size: 11px;" onclick="deleteHistoryItem(${h.id})">Xóa</button>
-                </div>
-              </td>
-            `;
-            tbody.appendChild(tr);
-          });
-        } else {
-          tbody.innerHTML = `<tr><td colspan="11" style="text-align: center; padding: 24px; color: var(--color-mute);">Chưa có lượt dự đoán nào được lưu. Hãy thử dự đoán ở Tab 1!</td></tr>`;
+        if (data.status === 'success') {
+          cachedHistoryData = data.data || [];
+          updateHistoryMetrics(cachedHistoryData);
+          renderHistoryTable(cachedHistoryData);
         }
       } catch (err) {
         console.error('Error loading history:', err);
+        showToast('Lỗi nạp nhật ký đo đạc.', 'error');
       }
+    }
+
+    function updateHistoryMetrics(items) {
+      document.getElementById('histCount').textContent = items.length;
+      if (items.length === 0) {
+        document.getElementById('histTopCrop').textContent = '—';
+        document.getElementById('histAvgConf').textContent = '0%';
+        document.getElementById('histAvgPh').textContent = '0.0';
+        return;
+      }
+
+      // Count crop frequencies
+      const cropCounts = {};
+      let totalConf = 0;
+      let totalPh = 0;
+
+      items.forEach(h => {
+        cropCounts[h.crop_name] = (cropCounts[h.crop_name] || 0) + 1;
+        totalConf += h.confidence;
+        totalPh += h.ph;
+      });
+
+      let topCrop = '—';
+      let maxCount = 0;
+      for (const [name, count] of Object.entries(cropCounts)) {
+        if (count > maxCount) {
+          maxCount = count;
+          topCrop = name;
+        }
+      }
+
+      document.getElementById('histTopCrop').textContent = topCrop;
+      document.getElementById('histAvgConf').textContent = (totalConf / items.length).toFixed(1) + '%';
+      document.getElementById('histAvgPh').textContent = (totalPh / items.length).toFixed(2);
+    }
+
+    function renderHistoryTable(items) {
+      const tbody = document.getElementById('historyTableBody');
+      tbody.innerHTML = '';
+      document.getElementById('historyCounterLabel').textContent = `Đang hiển thị: ${items.length} bản ghi`;
+
+      if (items && items.length > 0) {
+        items.forEach(h => {
+          const tr = document.createElement('tr');
+          tr.innerHTML = `
+            <td style="font-size: 12px; color: var(--color-mute); font-family: var(--font-mono);">${h.created_time}</td>
+            <td><strong style="color: var(--color-primary);">${h.emoji} ${h.crop_name}</strong></td>
+            <td><span class="badge-pill badge-success">${h.confidence.toFixed(1)}%</span></td>
+            <td>${h.n}</td>
+            <td>${h.p}</td>
+            <td>${h.k}</td>
+            <td>${h.temp}°C</td>
+            <td>${h.humidity}%</td>
+            <td>${h.ph}</td>
+            <td>${h.rainfall} mm</td>
+            <td>
+              <div style="display: flex; gap: 6px;">
+                <button type="button" class="preset-pill" style="padding: 3px 8px; font-size: 11px;" onclick='loadHistoryItem(${JSON.stringify(h)})'>Nạp lại</button>
+                <button type="button" class="btn-logout" style="padding: 3px 8px; font-size: 11px;" onclick="deleteHistoryItem(${h.id})">Xóa</button>
+              </div>
+            </td>
+          `;
+          tbody.appendChild(tr);
+        });
+      } else {
+        tbody.innerHTML = `<tr><td colspan="11" style="text-align: center; padding: 28px; color: var(--color-mute);">Chưa có lượt dự đoán nào được lưu. Hãy trải nghiệm dự đoán ở Tab 1!</td></tr>`;
+      }
+    }
+
+    function filterHistoryTable() {
+      const query = (document.getElementById('histSearchInput').value || '').toLowerCase().trim();
+      if (!query) {
+        renderHistoryTable(cachedHistoryData);
+        return;
+      }
+      const filtered = cachedHistoryData.filter(h => {
+        return (h.crop_name && h.crop_name.toLowerCase().includes(query)) ||
+               (h.created_time && h.created_time.toLowerCase().includes(query)) ||
+               String(h.n).includes(query) ||
+               String(h.p).includes(query) ||
+               String(h.k).includes(query);
+      });
+      renderHistoryTable(filtered);
     }
 
     function loadHistoryItem(h) {
@@ -1969,29 +3013,147 @@
 
       switchTab('predict');
       triggerPrediction();
+      showToast(`Đã nạp lại thông số cho cây: ${h.crop_name}`, 'info');
     }
 
     async function deleteHistoryItem(id) {
-      if (!confirm('Bạn có chắc chắn muốn xóa mục này?')) return;
+      if (!confirm('Bạn có chắc chắn muốn xóa bản ghi này?')) return;
       try {
         await fetch(`/api/history/${id}`, { method: 'DELETE' });
         loadHistory();
+        showToast('Đã xóa thành công bản ghi khỏi nhật ký.', 'success');
       } catch (err) {
         console.error('Error deleting item:', err);
+        showToast('Lỗi khi xóa bản ghi.', 'error');
       }
     }
 
     async function clearAllHistory() {
-      if (!confirm('Bạn có chắc muốn xóa toàn bộ lịch sử đo đạc?')) return;
+      if (!confirm('Bạn có chắc chắn muốn xóa toàn bộ lịch sử đo đạc?')) return;
       try {
         await fetch('/api/history/clear', { method: 'POST' });
         loadHistory();
+        showToast('Đã dọn dẹp sạch toàn bộ lịch sử.', 'success');
       } catch (err) {
         console.error('Error clearing history:', err);
+        showToast('Lỗi khi xóa toàn bộ lịch sử.', 'error');
       }
     }
 
-    // Auto-predict on initial load
+    // CSV Export of History
+    function exportHistoryToCSV() {
+      if (!cachedHistoryData || cachedHistoryData.length === 0) {
+        showToast('Chưa có dữ liệu lịch sử để xuất file.', 'error');
+        return;
+      }
+
+      const headers = ['Thời gian', 'Cây trồng', 'Độ tin cậy (%)', 'Đạm (N)', 'Lân (P)', 'Kali (K)', 'Nhiệt độ (°C)', 'Độ ẩm (%)', 'pH', 'Lượng mưa (mm)'];
+      const rows = cachedHistoryData.map(h => [
+        `"${h.created_time}"`,
+        `"${h.crop_name}"`,
+        h.confidence,
+        h.n,
+        h.p,
+        h.k,
+        h.temp,
+        h.humidity,
+        h.ph,
+        h.rainfall
+      ]);
+
+      const csvContent = '﻿' + [headers.join(','), ...rows.map(e => e.join(','))].join('\n');
+      const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.setAttribute('href', url);
+      link.setAttribute('download', `AgriBot_NhatKyThoNhuong_${new Date().toISOString().slice(0, 10)}.csv`);
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      showToast('Đã xuất file CSV thành công!', 'success');
+    }
+
+    // Lightbox Plot Viewer
+    function openLightbox(src, title) {
+      const modal = document.getElementById('lightboxModal');
+      const img = document.getElementById('lightboxImg');
+      const titleEl = document.getElementById('lightboxTitle');
+      if (modal && img) {
+        img.src = src;
+        if (titleEl) titleEl.textContent = title || 'Biểu Đồ Khoa Học';
+        modal.classList.add('active');
+      }
+    }
+
+    function closeLightbox(e) {
+      const modal = document.getElementById('lightboxModal');
+      if (modal) modal.classList.remove('active');
+    }
+
+    // Toast Notification System
+    function showToast(message, type = 'success') {
+      const container = document.getElementById('toastContainer');
+      if (!container) return;
+
+      const toast = document.createElement('div');
+      toast.className = `toast toast-${type}`;
+      const icon = type === 'success' ? '✓' : type === 'error' ? '⚠️' : 'ℹ️';
+      toast.innerHTML = `<span style="font-weight: 700;">${icon}</span><span>${message}</span>`;
+      container.appendChild(toast);
+
+      requestAnimationFrame(() => toast.classList.add('show'));
+
+      setTimeout(() => {
+        toast.classList.remove('show');
+        setTimeout(() => toast.remove(), 300);
+      }, 3500);
+    }
+
+    // Official Agricultural Extension Print Slip
+    function prepareAndPrintReport() {
+      if (!currentPredictionData) {
+        showToast('Vui lòng thực hiện dự đoán trước khi in.', 'error');
+        return;
+      }
+
+      const inp = currentPredictionData.input_data;
+      const top1 = currentPredictionData.top_crops[0] || {};
+      const fa = currentPredictionData.fertilizer_advice || {};
+
+      document.getElementById('slipTime').textContent = new Date().toLocaleString('vi-VN');
+      document.getElementById('slipN').textContent = inp.N + ' kg/ha';
+      document.getElementById('slipP').textContent = inp.P + ' kg/ha';
+      document.getElementById('slipK').textContent = inp.K + ' kg/ha';
+      document.getElementById('slipPh').textContent = inp.ph;
+      document.getElementById('slipTemp').textContent = inp.temperature + ' °C';
+      document.getElementById('slipHumidity').textContent = inp.humidity + ' %';
+      document.getElementById('slipRainfall').textContent = inp.rainfall + ' mm/năm';
+
+      document.getElementById('slipCropName').textContent = `${top1.emoji || ''} ${top1.name_vi || ''}`;
+      document.getElementById('slipCropProb').textContent = `${top1.probability || 0}%`;
+      document.getElementById('slipCropCycle').textContent = top1.cycle || 'Theo tiêu chuẩn';
+      document.getElementById('slipCropSoil').textContent = top1.soil_type || 'Đa dạng';
+      document.getElementById('slipCropTips').textContent = top1.tips || 'Canh tác bình thường';
+
+      const fertContainer = document.getElementById('slipFertList');
+      fertContainer.innerHTML = '';
+      if (fa.plans && fa.plans.length > 0) {
+        fa.plans.forEach(p => {
+          const pEl = document.createElement('div');
+          pEl.innerHTML = `• <strong>${p.nutrient} [${p.status}]:</strong> ${p.action}`;
+          fertContainer.appendChild(pEl);
+        });
+      }
+
+      window.print();
+    }
+
+    // Close lightbox on Escape key
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') closeLightbox();
+    });
+
+    // Auto-predict on initial page load
     window.addEventListener('DOMContentLoaded', () => {
       triggerPrediction();
     });

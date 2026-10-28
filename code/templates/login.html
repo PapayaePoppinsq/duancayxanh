@@ -293,6 +293,30 @@
       box-shadow: 0 2px 8px rgba(22, 101, 52, 0.2);
     }
 
+    .btn-demo {
+      width: 100%;
+      height: 42px;
+      margin-top: 10px;
+      background: var(--color-primary-subtle);
+      color: var(--color-primary);
+      border: 1px dashed var(--color-primary-border);
+      border-radius: var(--radius-pill);
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      transition: all 0.18s ease;
+    }
+
+    .btn-demo:hover {
+      background: var(--color-primary-light);
+      border-color: var(--color-primary);
+      transform: translateY(-1px);
+    }
+
     /* Auth Footer */
     .auth-footer {
       text-align: center;
@@ -409,7 +433,24 @@
           </svg>
         </button>
 
+        <!-- Quick Demo Account Fill -->
+        <button type="button" class="btn-demo" onclick="fillDemoAndLogin()" title="Tự động điền demo@agribot.vn / 123456 và đăng nhập">
+          <span>⚡ Trải nghiệm nhanh (Tài khoản Demo)</span>
+        </button>
+
       </form>
+
+      <script>
+        function fillDemoAndLogin() {
+          const e = document.getElementById('email');
+          const p = document.getElementById('password');
+          if (e && p) {
+            e.value = 'demo@agribot.vn';
+            p.value = '123456';
+            document.querySelector('form').submit();
+          }
+        }
+      </script>
 
       <!-- Auth Switcher -->
       <div class="auth-footer">

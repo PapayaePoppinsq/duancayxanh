@@ -43,3 +43,7 @@ repo_ref/
 
 # Cloudflare binary
 cloudflared.exe
+
+# Screenshots and temp scripts
+screenshot*.png
+login.js

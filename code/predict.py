@@ -22,7 +22,12 @@ if sys.platform.startswith('win'):
     except Exception:
         pass
 
-from advisor import get_crop_profile, diagnose_soil_and_climate, calculate_fertilizer_recommendation
+from advisor import (
+    get_crop_profile,
+    diagnose_soil_and_climate,
+    calculate_fertilizer_recommendation,
+    CROP_OPTIMAL_REQUIREMENTS
+)
 
 # Tải model và scaler một lần (Caching)
 BASE_DIR = os.path.dirname(__file__)
@@ -87,6 +92,7 @@ def predict_crop_recommendation(N, P, K, temp, humidity, ph, rainfall, top_k=3):
     # Tính toán khuyến nghị phân bón theo cây Top 1
     top1_id = top_crops[0]['id'] if top_crops else 'rice'
     fertilizer_advice = calculate_fertilizer_recommendation(top1_id, N, P, K)
+    optimal_req = CROP_OPTIMAL_REQUIREMENTS.get(top1_id, {})
     
     return {
         'input_data': {
@@ -96,7 +102,8 @@ def predict_crop_recommendation(N, P, K, temp, humidity, ph, rainfall, top_k=3):
         },
         'top_crops': top_crops,
         'diagnosis': diagnosis,
-        'fertilizer_advice': fertilizer_advice
+        'fertilizer_advice': fertilizer_advice,
+        'optimal_requirements': optimal_req
     }
 
 
